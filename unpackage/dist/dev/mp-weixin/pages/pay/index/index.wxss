@@ -1,0 +1,141 @@
+
+.pay-container.data-v-5837bfd4 {
+  background-color: #FFFFFF;
+  min-height: 100vh;
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 页面头部 */
+.page-header.data-v-5837bfd4 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40rpx;
+  padding-top: 10rpx;
+}
+.back-btn.data-v-5837bfd4 {
+  background-color: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+.back-icon.data-v-5837bfd4 {
+  width: 24rpx;
+  height: 24rpx;
+  color: #333333;
+}
+.header-title.data-v-5837bfd4 {
+  font-size: 20rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-left: -24rpx;
+}
+
+/* 支付金额卡片 */
+.pay-card.data-v-5837bfd4 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #F9F9F9;
+  border-radius: 16rpx;
+  padding: 60rpx 20rpx;
+  margin: 40rpx 0;
+}
+.pay-label.data-v-5837bfd4 {
+  font-size: 28rpx;
+  color: #666666;
+  margin-bottom: 24rpx;
+}
+.pay-amount.data-v-5837bfd4 {
+  font-size: 64rpx;
+  color: #D4B886;
+  font-weight: bold;
+  margin-bottom: 24rpx;
+}
+.order-no.data-v-5837bfd4 {
+  font-size: 24rpx;
+  color: #999999;
+}
+
+/* 支付方式 */
+.pay-method-section.data-v-5837bfd4 {
+  margin-bottom: 60rpx;
+}
+.section-title.data-v-5837bfd4 {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 24rpx;
+  display: block;
+}
+.pay-method-item.data-v-5837bfd4 {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  border: 1rpx solid #EEEEEE;
+  border-radius: 12rpx;
+  justify-content: space-between;
+}
+.pay-method-icon.data-v-5837bfd4 {
+  width: 56rpx;
+  height: 56rpx;
+  margin-right: 20rpx;
+}
+.pay-method-name.data-v-5837bfd4 {
+  font-size: 28rpx;
+  color: #333333;
+  flex: 1;
+}
+.select-icon.data-v-5837bfd4 {
+  width: 32rpx;
+  height: 32rpx;
+  color: #D4B886;
+}
+
+/* 支付说明 */
+.pay-desc.data-v-5837bfd4 {
+  margin-bottom: 60rpx;
+  padding: 24rpx;
+  background-color: #FFF8E1;
+  border-radius: 12rpx;
+}
+.desc-text.data-v-5837bfd4 {
+  font-size: 28rpx;
+  color: #D4B886;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 12rpx;
+}
+.desc-content.data-v-5837bfd4 {
+  font-size: 26rpx;
+  color: #666666;
+  line-height: 1.6;
+}
+.countdown-tip.data-v-5837bfd4 {
+  display: inline;
+}
+.countdown-highlight.data-v-5837bfd4 {
+  color: #F53F3F;
+  font-weight: bold;
+  margin: 0 4rpx;
+}
+
+/* 支付按钮 */
+.pay-btn.data-v-5837bfd4 {
+  width: 100%;
+  height: 88rpx;
+  background-color: #D4B886;
+  color: #FFFFFF;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.pay-btn.data-v-5837bfd4:disabled {
+  background-color: #E8D7BF;
+}

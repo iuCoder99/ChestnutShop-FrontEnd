@@ -1,0 +1,158 @@
+
+.feedback-container.data-v-e9b0a919 {
+  background-color: #F8F8F8;
+  min-height: 100vh;
+}
+.feedback-content-body.data-v-e9b0a919 {
+  padding: 30rpx;
+  padding-bottom: 120rpx;
+  box-sizing: border-box;
+}
+.feedback-card.data-v-e9b0a919 {
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+.form-item.data-v-e9b0a919 {
+  margin-bottom: 40rpx;
+}
+.form-item.data-v-e9b0a919:last-child {
+  margin-bottom: 0;
+}
+.label-row.data-v-e9b0a919 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16rpx;
+}
+.form-label.data-v-e9b0a919 {
+  font-size: 28rpx;
+  font-weight: bold;
+  color: #333333;
+}
+.form-label.required.data-v-e9b0a919::after {
+  content: '*';
+  color: #F53F3F;
+  margin-left: 4rpx;
+}
+.content-count.data-v-e9b0a919 {
+  font-size: 24rpx;
+  color: #999999;
+}
+.feedback-content.data-v-e9b0a919 {
+  width: 100%;
+  height: 300rpx;
+  padding: 20rpx;
+  background-color: #F9F9F9;
+  border: 1rpx solid #EEEEEE;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333333;
+  box-sizing: border-box;
+}
+.feedback-input.data-v-e9b0a919 {
+  width: 100%;
+  height: 88rpx;
+  padding: 0 20rpx;
+  background-color: #F9F9F9;
+  border: 1rpx solid #EEEEEE;
+  border-radius: 12rpx;
+  font-size: 28rpx;
+  color: #333333;
+  box-sizing: border-box;
+}
+
+/* 图片上传 */
+.upload-container.data-v-e9b0a919 {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  margin-top: 16rpx;
+}
+.upload-item.data-v-e9b0a919 {
+  position: relative;
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  overflow: visible;
+}
+.upload-img.data-v-e9b0a919 {
+  width: 100%;
+  height: 100%;
+  border-radius: 12rpx;
+}
+.close-btn.data-v-e9b0a919 {
+  position: absolute;
+  top: -12rpx;
+  right: -12rpx;
+  width: 36rpx;
+  height: 36rpx;
+  background-color: #FF4D4F;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+.close-icon.data-v-e9b0a919 {
+  color: #FFFFFF;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+.upload-add.data-v-e9b0a919 {
+  width: 160rpx;
+  height: 160rpx;
+  background-color: #F9F9F9;
+  border: 2rpx dashed #DDDDDD;
+  border-radius: 12rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.add-icon.data-v-e9b0a919 {
+  width: 48rpx;
+  height: 48rpx;
+  margin-bottom: 12rpx;
+}
+.add-text.data-v-e9b0a919 {
+  font-size: 24rpx;
+  color: #999999;
+}
+.upload-hint.data-v-e9b0a919 {
+  display: block;
+  margin-top: 16rpx;
+  font-size: 22rpx;
+  color: #999999;
+}
+
+/* 提交按钮 */
+.footer-btn-box.data-v-e9b0a919 {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx 40rpx;
+  background-color: #FFFFFF;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+}
+.submit-btn.data-v-e9b0a919 {
+  width: 100%;
+  height: 88rpx;
+  background-color: #D4B886;
+  color: #FFFFFF;
+  border-radius: 44rpx;
+  font-size: 32rpx;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+.submit-btn.data-v-e9b0a919:active {
+  opacity: 0.8;
+}
+.submit-btn.data-v-e9b0a919:disabled {
+  background-color: #E8D7BF;
+}

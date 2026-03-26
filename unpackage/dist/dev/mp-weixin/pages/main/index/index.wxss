@@ -1,0 +1,380 @@
+
+/* 全局样式 */
+.index-container.data-v-5a0044bb {
+  padding: 0; /* 首页容器不设 padding，由子组件控制 */
+  background-color: #FFFFFF;
+  min-height: 100vh;
+}
+
+/* 顶部内容区域 padding */
+.search-bar-container.data-v-5a0044bb,
+.category-nav.data-v-5a0044bb,
+.hot-product-container.data-v-5a0044bb,
+.guess-like-container.data-v-5a0044bb {
+  padding-left: 30rpx;
+  padding-right: 30rpx;
+}
+
+/* Hero Section (得物风：深色展示区) */
+.hero-section.data-v-5a0044bb {
+  background-color: #121212;
+  /* 【高度调节】通过调整上下 padding 来控制黑色区域的高度 */
+  padding-top: 60rpx; 
+  padding-bottom: 60rpx;
+  /* 你也可以直接设置固定高度，例如：height: 500rpx; 但建议用 padding 撑开更灵活 */
+  margin-bottom: 0;
+}
+.hero-content.data-v-5a0044bb {
+  display: flex;
+  /* 【位置调节】justify-content 控制整体对齐方式：
+     - flex-start: 靠左对齐 (当前)
+     - center: 居中对齐
+     - space-between: 两端对齐
+  */
+  justify-content: flex-start; 
+  align-items: center;
+  /* 【位置调节】padding 左右内边距，增加左边距可让内容整体右移 */
+  padding: 0 80rpx;
+}
+.hero-left.data-v-5a0044bb {
+  flex: 0 0 auto; 
+  /* 【位置调节】margin-right 控制文字与轮播图之间的间距，数值越大轮播图越靠右 */
+  margin-right: 820rpx; 
+  text-align: left;
+}
+.slogan-main.data-v-5a0044bb {
+  font-size: 96rpx;
+  font-weight: 900;
+  color: #FFFFFF;
+  margin-bottom: 30rpx;
+  letter-spacing: 8rpx;
+  line-height: 1.1;
+}
+.slogan-sub.data-v-5a0044bb {
+  font-size: 36rpx;
+  color: #999999;
+  margin-bottom: 50rpx;
+  letter-spacing: 2rpx;
+}
+.slogan-tags.data-v-5a0044bb {
+  display: flex;
+  align-items: center;
+}
+.tag-item.data-v-5a0044bb {
+  font-size: 26rpx;
+  color: #888888;
+}
+.tag-divider.data-v-5a0044bb {
+  color: #444444;
+  margin: 0 15rpx;
+}
+.hero-right.data-v-5a0044bb {
+  /* 【尺寸调节】控制轮播图的宽度 */
+  width: 1200rpx; 
+  /* 【尺寸调节】控制轮播图的高度 */
+  height: 600rpx; 
+  flex-shrink: 0;
+  position: relative;
+}
+.hero-swiper.data-v-5a0044bb {
+  width: 100%;
+  height: 100%;
+  border-radius: 4rpx;
+  overflow: hidden;
+  /* 移除阴影或设为透明，防止出现“盒子套盒子”的边界感 */
+  box-shadow: none; 
+  /* 确保背景色与大背景一致，消除色差 */
+  background-color: transparent;
+}
+.swiper-item-box.data-v-5a0044bb {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.swiper-item-box.active .hero-banner-img.data-v-5a0044bb {
+  transform: scale(1.05);
+}
+.hero-banner-img.data-v-5a0044bb {
+  width: 100%;
+  height: 100%;
+  transition: transform 1.2s ease;
+  /* 如果 mode="aspectFit" 还是展示不全，可尝试改为 mode="widthFix" 配合以下样式 */
+  /* object-fit: contain; */
+}
+
+/* 自定义指示点 */
+.custom-indicator.data-v-5a0044bb {
+  position: absolute;
+  bottom: 30rpx;
+  right: 30rpx;
+  display: flex;
+  gap: 12rpx;
+  z-index: 10;
+}
+.indicator-dot.data-v-5a0044bb {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.3);
+  transition: all 0.3s ease;
+}
+.indicator-dot.active.data-v-5a0044bb {
+  width: 40rpx;
+  border-radius: 6rpx;
+  background-color: #FFFFFF;
+}
+
+/* 搜索栏样式 */
+.search-bar-container.data-v-5a0044bb {
+  padding: 20rpx 30rpx;
+  background-color: #FFFFFF;
+  position: -webkit-sticky;
+  position: sticky;
+  top: calc(var(--status-bar-height) + 120rpx);
+  z-index: 100;
+  transition: all 0.3s ease;
+}
+.search-bar.data-v-5a0044bb {
+  display: flex;
+  align-items: center;
+  height: 80rpx;
+  background-color: #F5F5F5;
+  border-radius: 4rpx;
+  padding: 0 30rpx;
+  transition: all 0.3s ease;
+  border: 1rpx solid transparent;
+}
+.search-bar.data-v-5a0044bb:active {
+  background-color: #EEEEEE;
+  border-color: #DDDDDD;
+}
+.search-keyword-swiper.data-v-5a0044bb {
+  flex: 1;
+  height: 80rpx;
+}
+.keyword-item.data-v-5a0044bb {
+  display: flex;
+  align-items: center;
+}
+.search-icon.data-v-5a0044bb {
+  width: 32rpx;
+  height: 32rpx;
+  margin-right: 20rpx;
+}
+.search-placeholder.data-v-5a0044bb {
+  font-size: 28rpx;
+  color: #999999;
+  /* 确保文字垂直居中 */
+  line-height: 80rpx;
+}
+
+/* 文字导航样式 */
+.category-nav.data-v-5a0044bb {
+  white-space: nowrap;
+  margin-bottom: 20rpx;
+  height: 80rpx;
+  background-color: #FFFFFF;
+  position: relative;
+}
+.nav-item.data-v-5a0044bb {
+  display: inline-block;
+  padding: 0 30rpx;
+  font-size: 30rpx;
+  color: #666666;
+  position: relative;
+  line-height: 80rpx;
+  transition: all 0.3s ease;
+}
+.nav-item.data-v-5a0044bb:active {
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+.nav-item.active.data-v-5a0044bb {
+  color: #000000;
+  font-weight: bold;
+  font-size: 32rpx;
+}
+.nav-item.active.data-v-5a0044bb::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 30rpx;
+  right: 30rpx;
+  height: 6rpx;
+  background-color: #000000;
+  border-radius: 3rpx;
+  transition: all 0.3s ease;
+}
+
+/* 轮播图样式已移除，统一使用 hero-swiper */
+
+/* 公告样式 (黑白极简) */
+.notice-container.data-v-5a0044bb {
+  display: flex;
+  align-items: center;
+  height: 80rpx;
+  background-color: #121212;
+  padding: 0 30rpx;
+  margin-bottom: 40rpx;
+}
+.notice-label.data-v-5a0044bb {
+  font-size: 22rpx;
+  color: #FFFFFF;
+  margin-right: 20rpx;
+  font-weight: bold;
+  border-right: 1rpx solid rgba(255,255,255,0.3);
+  padding-right: 20rpx;
+}
+.notice-content.data-v-5a0044bb {
+  font-size: 24rpx;
+  color: #FFFFFF;
+  flex: 1;
+}
+
+/* 热门产品样式 */
+.hot-product-container.data-v-5a0044bb {
+  margin-bottom: 40rpx;
+}
+.section-title.data-v-5a0044bb {
+  font-size: 36rpx;
+  font-weight: 800;
+  color: #000000;
+  margin-bottom: 30rpx;
+  letter-spacing: 2rpx;
+  text-transform: uppercase;
+}
+.product-list.data-v-5a0044bb {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.product-item.data-v-5a0044bb {
+  width: 18.8%;
+  background-color: #FFFFFF;
+  border: 1rpx solid #EEEEEE;
+  border-radius: 4rpx;
+  overflow: hidden;
+  margin-bottom: 24rpx;
+  margin-right: 1.5%;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  top: 0;
+}
+.product-item.data-v-5a0044bb:nth-child(5n) {
+  margin-right: 0;
+}
+/* PC端悬停效果 */
+@media (min-width: 1024px) {
+.product-item.data-v-5a0044bb:hover {
+    transform: translateY(-8rpx) scale(1.02);
+    box-shadow: 0 16rpx 48rpx rgba(0, 0, 0, 0.12);
+    border-color: #000000;
+    z-index: 2;
+}
+.product-item:hover .product-img.data-v-5a0044bb {
+    transform: scale(1.05);
+}
+}
+/* 移动端点击效果 */
+.product-item-hover.data-v-5a0044bb {
+  background-color: #F9F9F9;
+  transform: scale(0.98);
+}
+.product-img.data-v-5a0044bb {
+  width: 100%;
+  height: 350rpx;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.product-info.data-v-5a0044bb {
+  padding: 10rpx;
+}
+.product-name.data-v-5a0044bb {
+  font-size: 22rpx;
+  color: #000000;
+  font-weight: bold;
+  margin-bottom: 4rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.2;
+}
+.product-sellPoint.data-v-5a0044bb {
+  font-size: 18rpx;
+  color: #999999;
+  margin-bottom: 8rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.product-price.data-v-5a0044bb {
+  font-size: 24rpx;
+  color: #000000;
+  font-weight: 900;
+  font-family: 'DIN Alternate', 'PingFang SC', sans-serif;
+}
+.enterprise-tag.data-v-5a0044bb {
+  display: inline-block;
+  font-size: 14rpx;
+  color: #FFFFFF;
+  background-color: #000000;
+  padding: 1rpx 4rpx;
+  margin-left: 4rpx;
+  border-radius: 2rpx;
+  vertical-align: middle;
+}
+
+/* 猜你喜欢样式 */
+.guess-like-container.data-v-5a0044bb {
+  margin-bottom: 40rpx;
+}
+.loading-status.data-v-5a0044bb {
+  text-align: center;
+  padding: 40rpx 0;
+  font-size: 24rpx;
+  color: #CCCCCC;
+}
+
+/* 回到顶部按钮样式 (得物风：极简方框) */
+.back-top.data-v-5a0044bb {
+  position: fixed;
+  right: 40rpx;
+  bottom: 140rpx;
+  width: 90rpx;
+  height: 90rpx;
+  background-color: #FFFFFF;
+  border-radius: 4rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.08);
+  z-index: 99;
+  opacity: 0;
+  transform: translateY(20rpx);
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+  border: 1rpx solid #000000;
+}
+.back-top.show.data-v-5a0044bb {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.back-top-icon.data-v-5a0044bb {
+  font-size: 36rpx;
+  color: #000000;
+  line-height: 1;
+  font-weight: bold;
+}
+.back-top-text.data-v-5a0044bb {
+  font-size: 18rpx;
+  color: #000000;
+  margin-top: 4rpx;
+  font-weight: bold;
+}

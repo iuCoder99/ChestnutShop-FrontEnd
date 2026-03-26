@@ -1,0 +1,24 @@
+{
+  "name": "demo1",
+  "version": "1.0.0",
+  "description": "小程序项目",
+  "main": "main.js",
+  "scripts": {
+    "dev": "uni",
+    "build": "uni build",
+    "dev:mp-weixin": "uni build --mode development --minify false --platform mp-weixin"
+  },
+  "dependencies": {
+    "@dcloudio/uni-components": "^3.0.0-alpha-3000020210521001",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.26"
+  },
+  "devDependencies": {
+    "@dcloudio/uni-cli-i18n": "^2.0.2-4080720251210002",
+    "@dcloudio/uni-cli-shared": "^2.0.2-4080720251210002",
+    "@dcloudio/vite-plugin-uni": "^3.0.0-alpha-4080720251125001",
+    "semver": "^7.7.3",
+    "vite": "^5.2.8",
+    "webpack": "^5.104.1"
+  }
+}

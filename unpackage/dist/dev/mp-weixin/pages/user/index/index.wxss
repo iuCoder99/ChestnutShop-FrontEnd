@@ -1,0 +1,207 @@
+
+.user-center-container.data-v-dd0dcdf8 {
+  background-color: #FFFFFF;
+  min-height: 100vh;
+}
+.user-content-body.data-v-dd0dcdf8 {
+  padding: 20rpx;
+}
+/* 页面头部 */
+.page-header.data-v-dd0dcdf8 {
+  margin-bottom: 30rpx;
+  padding-top: 10rpx;
+}
+.header-title.data-v-dd0dcdf8 {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333333;
+}
+/* 用户信息卡片 */
+.user-info-card.data-v-dd0dcdf8 {
+  display: flex;
+  align-items: center;
+  padding: 24rpx;
+  background-color: #F9F9F9;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+}
+.user-avatar.data-v-dd0dcdf8 {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 24rpx;
+}
+.user-base-info.data-v-dd0dcdf8 {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+  flex: 1;
+}
+.user-name-wrapper.data-v-dd0dcdf8 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.user-nickname.data-v-dd0dcdf8 {
+  font-size: 32rpx;
+  color: #333333;
+  font-weight: bold;
+}
+.address-tag.data-v-dd0dcdf8 {
+  display: flex;
+  align-items: center;
+  background-color: #F0F0F0;
+  padding: 8rpx 16rpx;
+  border-radius: 30rpx;
+  transition: all 0.3s;
+}
+.address-tag.data-v-dd0dcdf8:active {
+  background-color: #E0E0E0;
+}
+.address-tag-text.data-v-dd0dcdf8 {
+  font-size: 20rpx;
+  color: #666666;
+  margin-right: 4rpx;
+}
+.tag-arrow.data-v-dd0dcdf8 {
+  width: 16rpx;
+  height: 16rpx;
+  opacity: 0.6;
+}
+.login-tip.data-v-dd0dcdf8 {
+  font-size: 24rpx;
+  color: #999999;
+}
+.user-role.data-v-dd0dcdf8 {
+  font-size: 14rpx;
+  padding: 4rpx 12rpx;
+  border-radius: 20rpx;
+  width: -webkit-fit-content;
+  width: fit-content;
+}
+.role-personal.data-v-dd0dcdf8 {
+  background-color: #FFF8E1;
+  color: #FF7D00;
+}
+.role-enterprise.data-v-dd0dcdf8 {
+  background-color: #E8F4F8;
+  color: #1890FF;
+}
+.auth-status.data-v-dd0dcdf8 {
+  font-size: 14rpx;
+  color: #666666;
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.auth-btn.data-v-dd0dcdf8 {
+  font-size: 12rpx;
+  color: #D4B886;
+  background-color: transparent;
+  padding: 0;
+}
+.user-openid.data-v-dd0dcdf8 {
+  font-size: 12rpx;
+  color: #999999;
+  margin-top: 8rpx;
+}
+/* 功能列表 */
+.function-list.data-v-dd0dcdf8 {
+  display: flex;
+  flex-direction: column;
+  gap: 1rpx;
+}
+.function-item.data-v-dd0dcdf8 {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  background-color: #FFFFFF;
+  border: 1rpx solid #EEEEEE;
+  border-bottom: none;
+}
+.function-item.data-v-dd0dcdf8:first-child {
+  border-top-left-radius: 8rpx;
+  border-top-right-radius: 8rpx;
+}
+.function-item.data-v-dd0dcdf8:last-child {
+  border-bottom-left-radius: 8rpx;
+  border-bottom-right-radius: 8rpx;
+  border-bottom: 1rpx solid #EEEEEE;
+}
+.function-icon.data-v-dd0dcdf8 {
+  width: 28rpx;
+  height: 28rpx;
+  color: #D4B886;
+  margin-right: 16rpx;
+}
+.function-text.data-v-dd0dcdf8 {
+  flex: 1;
+  font-size: 28rpx;
+  color: #333333;
+}
+.unread-dot.data-v-dd0dcdf8 {
+  background-color: #FF4D4F;
+  color: #FFFFFF;
+  font-size: 20rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 8rpx;
+  margin-right: 12rpx;
+}
+.arrow-icon.data-v-dd0dcdf8 {
+  width: 20rpx;
+  height: 20rpx;
+  color: #999999;
+}
+/* 我的订单 */
+.order-card.data-v-dd0dcdf8 {
+  background-color: #F9F9F9;
+  border-radius: 16rpx;
+  padding: 24rpx;
+  margin-bottom: 30rpx;
+}
+.order-header.data-v-dd0dcdf8 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24rpx;
+}
+.order-title.data-v-dd0dcdf8 {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+}
+.check-all-btn.data-v-dd0dcdf8 {
+  display: flex;
+  align-items: center;
+}
+.check-all-text.data-v-dd0dcdf8 {
+  font-size: 24rpx;
+  color: #999999;
+  margin-right: 4rpx;
+}
+.order-status-row.data-v-dd0dcdf8 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 10rpx;
+}
+.status-item.data-v-dd0dcdf8 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12rpx;
+  position: relative;
+}
+.status-icon.data-v-dd0dcdf8 {
+  width: 48rpx;
+  height: 48rpx;
+}
+.status-text.data-v-dd0dcdf8 {
+  font-size: 24rpx;
+  color: #666666;
+}

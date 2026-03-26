@@ -1,0 +1,39 @@
+{
+  "pages": [
+    "pages/main/index/index",
+    "pages/project/detail/detail",
+    "pages/cart/index/index",
+    "pages/order/confirm/confirm",
+    "pages/address/list/list",
+    "pages/user/index/index",
+    "pages/user/profile/profile",
+    "pages/order/list/list",
+    "pages/order/search/search",
+    "pages/order/logistics/logistics",
+    "pages/order/enterprise-auth/enterprise-auth",
+    "pages/address/edit/edit",
+    "pages/collection/index/index",
+    "pages/user/feedback/feedback",
+    "pages/user/about/about",
+    "pages/product/category/category",
+    "pages/pay/success/success",
+    "pages/order/detail/detail",
+    "pages/pay/index/index",
+    "pages/main/login/login",
+    "pages/pay/fail/fail",
+    "pages/product/search/search",
+    "pages/product/detail/detail",
+    "pages/user/consult/consult",
+    "pages/product/list/list",
+    "pages/product/comment/comment"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "某某家具装修",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#F5F5F5"
+  },
+  "__usePrivacyCheck__": true,
+  "lazyCodeLoading": "requiredComponents",
+  "usingComponents": {}
+}

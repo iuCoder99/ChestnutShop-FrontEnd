@@ -1,0 +1,122 @@
+
+.top-nav-wrapper.data-v-a85143be {
+  width: 100%;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* 状态栏占位 */
+.status-bar.data-v-a85143be {
+  height: var(--status-bar-height);
+  width: 100%;
+  background-color: #000000;
+}
+
+/* 顶部导航栏 (深黑，去除右侧边距) */
+.top-nav-bar.data-v-a85143be {
+  width: 100%;
+  height: 120rpx;
+  background-color: #000000;
+  display: flex;
+  align-items: center;
+  padding: 0 0 0 40rpx; /* 左边距40rpx，右边距设为0 */
+  box-sizing: border-box;
+}
+.nav-content.data-v-a85143be {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand-logo.data-v-a85143be {
+  width: 80rpx;
+  height: 80rpx;
+  margin-right: 40rpx;
+  transition: all 0.3s ease;
+}
+.logo-animate.data-v-a85143be {
+  animation: logo-bounce-a85143be 0.8s cubic-bezier(0.45, 0.05, 0.55, 0.95);
+}
+@keyframes logo-bounce-a85143be {
+0% { transform: scale(1);
+}
+30% { transform: scale(1.2) rotate(5deg);
+}
+50% { transform: scale(0.9) rotate(-5deg);
+}
+70% { transform: scale(1.1) rotate(2deg);
+}
+100% { transform: scale(1) rotate(0);
+}
+}
+.nav-links.data-v-a85143be {
+  flex: 1;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 0;
+}
+.nav-link-item.data-v-a85143be {
+  color: #FFFFFF;
+  font-size: 32rpx;
+  font-weight: bold;
+  margin-right: 50rpx;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+.home-click-animate.data-v-a85143be {
+  animation: text-pulse-a85143be 0.5s ease;
+}
+@keyframes text-pulse-a85143be {
+0% { transform: scale(1); opacity: 1;
+}
+50% { transform: scale(1.1); opacity: 0.8;
+}
+100% { transform: scale(1); opacity: 1;
+}
+}
+.nav-link-item.data-v-a85143be:hover {
+  opacity: 0.8;
+  transform: translateY(-2rpx);
+}
+.nav-link-item.data-v-a85143be:active {
+  opacity: 0.7;
+  transform: scale(0.95);
+}
+.nav-link-item.active.data-v-a85143be {
+  border-bottom: 6rpx solid #FFFFFF;
+  padding-bottom: 4rpx;
+  transform: translateY(0);
+}
+
+/* 下载按钮容器：紧贴最右侧 */
+.download-btn-container.data-v-a85143be {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  padding-right: 0rpx; /* 彻底去除最右侧空白 */
+}
+.download-btn.data-v-a85143be {
+  background-color: #53BAB3;
+  color: #FFFFFF;
+  font-size: 26rpx;
+  font-weight: bold;
+  padding: 14rpx 28rpx;
+  border-radius: 4rpx;
+  cursor: pointer;
+  margin-right: 0rpx; /* 确保无额外边距 */
+  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+.download-btn.data-v-a85143be:hover {
+  background-color: #64C9C2;
+  transform: translateY(-2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(83, 186, 179, 0.4);
+}
+.download-btn.data-v-a85143be:active {
+  transform: scale(0.95);
+  box-shadow: none;
+}

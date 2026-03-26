@@ -1,0 +1,140 @@
+
+.about-container.data-v-d6b522c7 {
+  background-color: #F8F8F8;
+  min-height: 100vh;
+}
+.about-content-body.data-v-d6b522c7 {
+  padding: 20rpx;
+}
+
+/* 品牌信息 */
+.brand-info.data-v-d6b522c7 {
+  position: relative;
+  margin-bottom: 30rpx;
+  background-color: #FFFFFF;
+  border-radius: 16rpx;
+  overflow: hidden;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+.brand-banner-wrap.data-v-d6b522c7 {
+  position: relative;
+  width: 100%;
+  height: 320rpx;
+}
+.brand-banner.data-v-d6b522c7 {
+  width: 100%;
+  height: 100%;
+}
+.brand-overlay.data-v-d6b522c7 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.6) 100%);
+}
+.brand-content.data-v-d6b522c7 {
+  position: absolute;
+  left: 30rpx;
+  bottom: 30rpx;
+  right: 30rpx;
+  display: flex;
+  flex-direction: column;
+}
+.brand-name.data-v-d6b522c7 {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #FFFFFF;
+  text-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.6);
+}
+
+/* 通用 section 样式 */
+.intro-section.data-v-d6b522c7, .contact-section.data-v-d6b522c7 {
+  margin-bottom: 30rpx;
+  background-color: #FFFFFF;
+  padding: 24rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+}
+.section-title.data-v-d6b522c7 {
+  font-size: 18rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+}
+.section-title.data-v-d6b522c7::before {
+  content: '';
+  width: 6rpx;
+  height: 24rpx;
+  background-color: #D4B886;
+  margin-right: 12rpx;
+  border-radius: 4rpx;
+}
+
+/* 简介内容 */
+.intro-content.data-v-d6b522c7 {
+  font-size: 16rpx;
+  color: #666666;
+  line-height: 1.6;
+  text-align: justify;
+}
+
+/* 联系方式列表 */
+.contact-list.data-v-d6b522c7 {
+  display: flex;
+  flex-direction: column;
+  gap: 12rpx;
+}
+.contact-item.data-v-d6b522c7 {
+  display: flex;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+.contact-item.data-v-d6b522c7:last-child {
+  border-bottom: none;
+}
+.contact-icon.data-v-d6b522c7 {
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 16rpx;
+  color: #D4B886;
+}
+.contact-label.data-v-d6b522c7 {
+  font-size: 16rpx;
+  color: #333333;
+  width: 100rpx;
+}
+.contact-value.data-v-d6b522c7 {
+  flex: 1;
+  font-size: 16rpx;
+  color: #666666;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.copy-tag.data-v-d6b522c7 {
+  font-size: 14rpx;
+  color: #D4B886;
+  padding: 4rpx 12rpx;
+  border: 1rpx solid #D4B886;
+  border-radius: 4rpx;
+  margin-left: 16rpx;
+}
+.arrow-icon.data-v-d6b522c7 {
+  width: 20rpx;
+  height: 20rpx;
+  color: #999999;
+  margin-left: 16rpx;
+}
+
+/* 版权信息 */
+.copyright.data-v-d6b522c7 {
+  margin-top: 50rpx;
+  text-align: center;
+  font-size: 14rpx;
+  color: #999999;
+  line-height: 1.8;
+}

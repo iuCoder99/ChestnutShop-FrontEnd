@@ -1,0 +1,414 @@
+
+.order-detail-container.data-v-78cad3ff {
+  background-color: #FFFFFF;
+  min-height: 100vh;
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+}
+
+/* 页面头部 */
+.page-header.data-v-78cad3ff {
+  display: flex;
+  align-items: center;
+  margin-bottom: 24rpx;
+  padding-top: 10rpx;
+}
+.back-btn.data-v-78cad3ff {
+  background-color: transparent;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  border: none;
+  margin: 0;
+  line-height: 1;
+}
+.back-btn.data-v-78cad3ff::after {
+  border: none;
+}
+.back-icon.data-v-78cad3ff {
+  width: 32rpx;
+  height: 32rpx;
+}
+.header-title.data-v-78cad3ff {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-left: 20rpx;
+}
+
+/* 订单状态标签 */
+.order-status-tag.data-v-78cad3ff {
+  width: -webkit-fit-content;
+  width: fit-content;
+  padding: 10rpx 24rpx;
+  border-radius: 30rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  margin-bottom: 30rpx;
+}
+.status-pending-pay.data-v-78cad3ff {
+  background-color: #FFF1F0;
+  color: #F53F3F;
+}
+.status-pending-confirm.data-v-78cad3ff {
+  background-color: #FFF7E6;
+  color: #FF7D00;
+}
+.status-pending-ship.data-v-78cad3ff {
+  background-color: #E6F7FF;
+  color: #1890FF;
+}
+.status-pending-receipt.data-v-78cad3ff {
+  background-color: #F6FFED;
+  color: #00B42A;
+}
+.status-completed.data-v-78cad3ff {
+  background-color: #F0F5FF;
+  color: #0084FF;
+}
+.status-cancelled.data-v-78cad3ff {
+  background-color: #F5F5F5;
+  color: #999999;
+}
+.status-after-sale.data-v-78cad3ff {
+  background-color: #F9F0FF;
+  color: #722ED1;
+}
+
+/* 支付倒计时 */
+.pay-countdown-box.data-v-78cad3ff {
+  display: flex;
+  align-items: center;
+  background-color: #FFF8E1;
+  padding: 16rpx 24rpx;
+  border-radius: 12rpx;
+  margin-bottom: 30rpx;
+}
+.time-icon.data-v-78cad3ff {
+  width: 28rpx;
+  height: 28rpx;
+  margin-right: 12rpx;
+}
+.countdown-label.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #D4B886;
+}
+.countdown-value.data-v-78cad3ff {
+  font-size: 28rpx;
+  color: #D4B886;
+  font-weight: bold;
+}
+
+/* 订单基础信息 */
+.order-base-info.data-v-78cad3ff {
+  background-color: #F9F9F9;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  margin-bottom: 30rpx;
+}
+.info-item.data-v-78cad3ff {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 16rpx;
+}
+.info-item.data-v-78cad3ff:last-child {
+  margin-bottom: 0;
+}
+.info-label.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #666666;
+  width: 160rpx;
+  flex-shrink: 0;
+}
+.info-value.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #333333;
+  word-break: break-all;
+}
+
+/* 通用 section 样式 */
+.goods-section.data-v-78cad3ff, .receipt-section.data-v-78cad3ff, .logistics-section.data-v-78cad3ff, .payment-section.data-v-78cad3ff, .remark-section.data-v-78cad3ff {
+  margin-bottom: 30rpx;
+}
+.section-title.data-v-78cad3ff {
+  font-size: 30rpx;
+  font-weight: bold;
+  color: #333333;
+  margin-bottom: 20rpx;
+  display: block;
+}
+
+/* 商品清单 */
+.goods-list.data-v-78cad3ff {
+  border: 1rpx solid #EEEEEE;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+.goods-item.data-v-78cad3ff {
+  display: flex;
+  align-items: center;
+  padding: 20rpx;
+  border-bottom: 1rpx solid #EEEEEE;
+}
+.goods-item.data-v-78cad3ff:last-child {
+  border-bottom: none;
+}
+.goods-img.data-v-78cad3ff {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+}
+.goods-info.data-v-78cad3ff {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.goods-name.data-v-78cad3ff {
+  font-size: 28rpx;
+  color: #333333;
+  margin-bottom: 8rpx;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+.goods-spec.data-v-78cad3ff {
+  font-size: 24rpx;
+  color: #999999;
+  margin-bottom: 10rpx;
+}
+.goods-count-price.data-v-78cad3ff {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.goods-count.data-v-78cad3ff {
+  font-size: 24rpx;
+  color: #999999;
+}
+.goods-price.data-v-78cad3ff {
+  font-size: 28rpx;
+  color: #333333;
+  font-weight: bold;
+}
+
+/* 收货信息 */
+.receipt-info.data-v-78cad3ff {
+  background-color: #F9F9F9;
+  border-radius: 12rpx;
+  padding: 24rpx;
+}
+.receipt-item.data-v-78cad3ff {
+  margin-bottom: 16rpx;
+}
+.receipt-item.data-v-78cad3ff:last-child {
+  margin-bottom: 0;
+}
+.receipt-label.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #666666;
+  display: block;
+  margin-bottom: 8rpx;
+}
+.receipt-value.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #333333;
+  line-height: 1.5;
+}
+
+/* 物流信息 */
+.logistics-info.data-v-78cad3ff {
+  background-color: #F9F9F9;
+  border-radius: 12rpx;
+  padding: 24rpx;
+}
+.logistics-item.data-v-78cad3ff {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20rpx;
+}
+.logistics-item.data-v-78cad3ff:last-child {
+  margin-bottom: 24rpx;
+}
+.logistics-label.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #666666;
+  width: 140rpx;
+  flex-shrink: 0;
+}
+.logistics-value.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #333333;
+  flex: 1;
+  word-break: break-all;
+}
+.copy-btn.data-v-78cad3ff {
+  font-size: 24rpx;
+  color: #D4B886;
+  background-color: transparent;
+  padding: 0 10rpx;
+  margin: 0;
+  line-height: 1.5;
+  border: none;
+}
+.copy-btn.data-v-78cad3ff::after {
+  border: none;
+}
+.logistics-track.data-v-78cad3ff {
+  padding: 20rpx 0;
+  border-top: 1rpx solid #EEEEEE;
+  margin-bottom: 20rpx;
+}
+.track-item.data-v-78cad3ff {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20rpx;
+  position: relative;
+  padding-left: 30rpx;
+}
+.track-item.data-v-78cad3ff::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12rpx;
+  width: 12rpx;
+  height: 12rpx;
+  background-color: #D4B886;
+  border-radius: 50%;
+}
+.track-item.data-v-78cad3ff:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 5rpx;
+  top: 24rpx;
+  width: 2rpx;
+  height: calc(100% + 8rpx);
+  background-color: #EEEEEE;
+}
+.track-time.data-v-78cad3ff {
+  font-size: 24rpx;
+  color: #999999;
+  margin-bottom: 8rpx;
+}
+.track-content.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #333333;
+  line-height: 1.4;
+}
+.check-logistics-btn.data-v-78cad3ff {
+  width: 100%;
+  height: 72rpx;
+  line-height: 72rpx;
+  background-color: #FFFFFF;
+  border: 1rpx solid #D4B886;
+  color: #D4B886;
+  border-radius: 36rpx;
+  font-size: 26rpx;
+}
+.no-logistics.data-v-78cad3ff {
+  padding: 40rpx;
+  text-align: center;
+  background-color: #F9F9F9;
+  border-radius: 12rpx;
+}
+.no-logistics-text.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #999999;
+}
+
+/* 支付信息 */
+.payment-info.data-v-78cad3ff {
+  background-color: #F9F9F9;
+  border-radius: 12rpx;
+  padding: 24rpx;
+}
+.payment-item.data-v-78cad3ff {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16rpx;
+}
+.payment-item.data-v-78cad3ff:last-child {
+  margin-bottom: 0;
+}
+.payment-label.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #666666;
+}
+.payment-value.data-v-78cad3ff {
+  font-size: 26rpx;
+  color: #333333;
+}
+.total-payment .payment-label.data-v-78cad3ff {
+  font-weight: bold;
+  color: #333333;
+}
+.total-payment .payment-value.data-v-78cad3ff {
+  font-size: 32rpx;
+  color: #D4B886;
+  font-weight: bold;
+}
+
+/* 订单备注 */
+.remark-content.data-v-78cad3ff {
+  background-color: #F9F9F9;
+  border-radius: 12rpx;
+  padding: 24rpx;
+  font-size: 26rpx;
+  color: #333333;
+  line-height: 1.6;
+}
+
+/* 操作按钮区域 */
+.operation-section.data-v-78cad3ff {
+  display: flex;
+  gap: 20rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20rpx 30rpx;
+  background-color: #FFFFFF;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.05);
+  z-index: 100;
+}
+.oper-btn.data-v-78cad3ff {
+  flex: 1;
+  height: 80rpx;
+  line-height: 80rpx;
+  border-radius: 40rpx;
+  font-size: 28rpx;
+  border: none;
+  margin: 0;
+}
+.oper-btn.data-v-78cad3ff::after {
+  border: none;
+}
+.cancel-btn.data-v-78cad3ff {
+  background-color: #FFFFFF;
+  border: 1rpx solid #DDDDDD;
+  color: #666666;
+}
+.pay-btn.data-v-78cad3ff {
+  background-color: #D4B886;
+  color: #FFFFFF;
+}
+.contact-btn.data-v-78cad3ff {
+  background-color: #E8F4F8;
+  color: #1890FF;
+}
+.confirm-btn.data-v-78cad3ff {
+  background-color: #D4B886;
+  color: #FFFFFF;
+}
+.logistics-btn.data-v-78cad3ff {
+  background-color: #FFFFFF;
+  border: 1rpx solid #D4B886;
+  color: #D4B886;
+}
+.aftersale-btn.data-v-78cad3ff {
+  background-color: #F9F0FF;
+  color: #722ED1;
+}

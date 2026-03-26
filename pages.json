@@ -1,0 +1,196 @@
+{
+  "pages": [
+    {
+      "path": "pages/main/index/index",
+      "style": {
+        "navigationBarTitleText": "首页",
+        "enablePullDownRefresh": true,
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/project/detail/detail",
+      "style": {
+        "navigationBarTitleText": "项目详情"
+      }
+    },
+    {
+      "path": "pages/cart/index/index",
+      "style": {
+        "navigationBarTitleText": "购物车",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/order/confirm/confirm",
+      "style": {
+        "navigationBarTitleText": "确认订单"
+      }
+    },
+    {
+      "path": "pages/address/list/list",
+      "style": {
+        "navigationBarTitleText": "地址管理"
+      }
+    },
+    {
+      "path": "pages/user/index/index",
+      "style": {
+        "navigationBarTitleText": "个人中心",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/user/profile/profile",
+      "style": {
+        "navigationBarTitleText": "个人信息"
+      }
+    },
+    {
+      "path": "pages/order/list/list",
+      "style": {
+        "navigationBarTitleText": "我的订单",
+        "app-plus": {
+          "titleNView": {
+            "buttons": [
+              {
+                "type": "search",
+                "float": "right"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "path": "pages/order/search/search",
+      "style": {
+        "navigationBarTitleText": "搜索订单"
+      }
+    },
+    {
+      "path": "pages/order/logistics/logistics",
+      "style": {
+        "navigationBarTitleText": "物流跟踪"
+      }
+    },
+    {
+      "path": "pages/order/enterprise-auth/enterprise-auth",
+      "style": {
+        "navigationBarTitleText": "企业客户认证"
+      }
+    },
+    {
+      "path": "pages/address/edit/edit",
+      "style": {
+        "navigationBarTitleText": "收货地址",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/collection/index/index",
+      "style": {
+        "navigationBarTitleText": "我的收藏"
+      }
+    },
+    {
+      "path": "pages/user/feedback/feedback",
+      "style": {
+        "navigationBarTitleText": "意见反馈",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/user/about/about",
+      "style": {
+        "navigationBarTitleText": "关于我们",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/product/category/category",
+      "style": {
+        "navigationBarTitleText": "产品分类",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/pay/success/success",
+      "style": {
+        "navigationBarTitleText": "支付成功"
+      }
+    },
+    {
+      "path": "pages/order/detail/detail",
+      "style": {
+        "navigationBarTitleText": "订单详情"
+      }
+    },
+    {
+      "path": "pages/pay/index/index",
+      "style": {
+        "navigationBarTitleText": "订单支付"
+      }
+    },
+    {
+      "path": "pages/main/login/login",
+      "style": {
+        "navigationBarTitleText": "登录授权"
+      }
+    },
+    {
+      "path": "pages/pay/fail/fail",
+      "style": {
+        "navigationBarTitleText": "支付失败"
+      }
+    },
+    {
+      "path": "pages/product/search/search",
+      "style": {
+        "navigationBarTitleText": "搜索结果"
+      }
+    },
+    {
+      "path": "pages/product/detail/detail",
+      "style": {
+        "navigationBarTitleText": "产品详情",
+        "navigationStyle": "custom"
+      }
+    },
+    {
+      "path": "pages/user/consult/consult",
+      "style": {
+        "navigationBarTitleText": "在线咨询"
+      }
+	},
+    {
+      "path": "pages/product/list/list",
+      "style": {
+        "navigationBarTitleText": "商品列表"
+      }
+    },
+    {
+      "path": "pages/product/comment/comment",
+      "style": {
+        "navigationBarTitleText": "商品评价",
+        "navigationStyle": "custom"
+      }
+    }
+
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "某某家具装修",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#F5F5F5"
+  },
+  "uniIdRouter": {},
+  "networkTimeout": {
+    "request": 15000
+  },
+  "easycom": {
+    "autoscan": true,
+    "custom": {
+    }
+  }
+}

@@ -1,0 +1,185 @@
+
+.address-edit-container.data-v-460af471 {
+  background-color: #F8F8F8;
+  min-height: 100vh;
+  padding-bottom: 60rpx;
+}
+
+/* 页面头部 */
+.page-header.data-v-460af471 {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20rpx 30rpx;
+  padding-top: 40rpx;
+  background-color: #FFFFFF;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.back-area.data-v-460af471 {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+}
+.back-icon.data-v-460af471 {
+  width: 40rpx;
+  height: 40rpx;
+}
+.header-title.data-v-460af471 {
+  font-size: 34rpx;
+  font-weight: bold;
+  color: #333333;
+}
+.save-area.data-v-460af471 {
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.save-text.data-v-460af471 {
+  font-size: 30rpx;
+  color: #D4B886;
+  font-weight: 500;
+}
+.save-area.disabled.data-v-460af471 {
+  opacity: 0.5;
+}
+
+/* 表单区域 */
+.address-form.data-v-460af471 {
+  padding: 20rpx 0;
+}
+.form-group.data-v-460af471 {
+  background-color: #FFFFFF;
+  margin-bottom: 20rpx;
+  padding: 0 32rpx;
+}
+.form-item.data-v-460af471 {
+  display: flex;
+  align-items: center;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+.form-item.no-border.data-v-460af471 {
+  border-bottom: none;
+}
+.form-label.data-v-460af471 {
+  width: 180rpx;
+  font-size: 30rpx;
+  color: #333333;
+}
+.form-input.data-v-460af471 {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333333;
+}
+.form-textarea.data-v-460af471 {
+  flex: 1;
+  font-size: 30rpx;
+  color: #333333;
+  min-height: 80rpx;
+  padding: 10rpx 0;
+}
+
+/* 省市区选择 */
+.area-picker.data-v-460af471 {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.area-text.data-v-460af471 {
+  font-size: 30rpx;
+  color: #333333;
+}
+.area-placeholder.data-v-460af471 {
+  font-size: 30rpx;
+  color: #999999;
+}
+.arrow-icon.data-v-460af471 {
+  width: 32rpx;
+  height: 32rpx;
+  opacity: 0.3;
+}
+
+/* 默认地址选项 */
+.default-item.data-v-460af471 {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20rpx;
+  border-bottom: none;
+}
+.default-text.data-v-460af471 {
+  font-size: 28rpx;
+  color: #333333;
+}
+
+/* 删除区域 */
+.delete-area.data-v-460af471 {
+  margin-top: 40rpx;
+  background-color: #FFFFFF;
+  padding: 32rpx 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.delete-text.data-v-460af471 {
+  font-size: 30rpx;
+  color: #F53F3F;
+}
+
+/* 省市区选择器弹窗 */
+.picker-popup.data-v-460af471 {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.picker-container.data-v-460af471 {
+  background-color: #FFFFFF;
+  border-top-left-radius: 32rpx;
+  border-top-right-radius: 32rpx;
+  padding-bottom: 60rpx;
+}
+.picker-header.data-v-460af471 {
+  display: flex;
+  justify-content: space-between;
+  padding: 32rpx 40rpx;
+  border-bottom: 1rpx solid #F5F5F5;
+}
+.picker-cancel.data-v-460af471, .picker-confirm.data-v-460af471 {
+  font-size: 32rpx;
+  background-color: transparent;
+  padding: 0;
+  margin: 0;
+  line-height: 1;
+}
+.picker-cancel.data-v-460af471 {
+  color: #999999;
+}
+.picker-confirm.data-v-460af471 {
+  color: #D4B886;
+  font-weight: bold;
+}
+.picker-view.data-v-460af471 {
+  width: 100%;
+  height: 500rpx;
+}
+.picker-item.data-v-460af471 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: #333333;
+}

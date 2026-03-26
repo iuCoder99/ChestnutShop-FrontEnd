@@ -1,0 +1,7 @@
+{
+  "navigationBarTitleText": "产品详情",
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "spec-picker": "../../../components/business/SpecPicker"
+  }
+}
