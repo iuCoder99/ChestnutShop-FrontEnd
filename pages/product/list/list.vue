@@ -38,11 +38,23 @@
       class="product-scroll"
       @scrolltolower="loadMore"
     >
-      <view class="product-list" v-if="productList.length > 0">
+      <!-- 骨架屏加载中 -->
+      <view class="skeleton-list" v-if="loading && productList.length === 0">
+        <view class="skeleton-item" v-for="i in 6" :key="i">
+          <view class="skeleton-img pulse"></view>
+          <view class="skeleton-info">
+            <view class="skeleton-name pulse"></view>
+            <view class="skeleton-desc pulse"></view>
+            <view class="skeleton-price pulse"></view>
+          </view>
+        </view>
+      </view>
+
+      <view class="product-list fade-in" v-else-if="productList.length > 0">
         <view 
           class="product-item" 
           v-for="(item, index) in productList" 
-          :key="index"
+          :key="item.id || index"
           @click="goToDetail(item.id)"
         >
           <image :src="item.image || item.imageUrl || '/static/images/default-product.png'" mode="aspectFill" class="product-img"></image>
@@ -62,7 +74,7 @@
       </view>
 
       <!-- 加载更多 -->
-      <view class="loading-more" v-if="loading">
+      <view class="loading-more" v-if="loading && productList.length > 0">
         <text>加载中...</text>
       </view>
       <view class="no-more" v-if="!hasMore && productList.length > 0">
@@ -76,20 +88,29 @@
 import { ref } from 'vue';
 import { onLoad } from '@dcloudio/uni-app';
 import request from '@/utils/request';
+import { productApi } from '@/utils/api';
 
-const categoryId = ref('');
-const sortType = ref('default'); // 初始状态为default，对应二级分类商品列表接口
-// sortType values: 'default' (initial), 'sales', 'price_asc', 'price_desc', 'new'
-const page = ref(1);
-const pageSize = ref(10);
+const pageCategoryId = ref('');
+const isFirstCategoryId = ref(false); // 是否是一级分类
+const sortType = ref('default'); // 排序方式：default, priceAsc, priceDesc, newest
+
 const productList = ref([]);
 const loading = ref(false);
 const hasMore = ref(true);
-const beginProductId = ref('0'); // For category product list cursor pagination
+const sortValue = ref(null); // 滚动查询排序值
+const sortId = ref(null); // 滚动查询ID
+const querySize = ref(20);
 
 onLoad((options) => {
   if (options.categoryId) {
-    categoryId.value = options.categoryId;
+    pageCategoryId.value = options.categoryId;
+    isFirstCategoryId.value = options.isFirstCategoryId === 'true' || options.isFirstCategoryId === true;
+    
+    // 如果传了初始排序方式
+    if (options.sortType) {
+      sortType.value = options.sortType;
+    }
+
     // 设置页面标题
     if (options.categoryName) {
       uni.setNavigationBarTitle({
@@ -107,8 +128,8 @@ const handleSort = (type) => {
   sortType.value = type;
   
   // 重置列表
-  page.value = 1;
-  beginProductId.value = '0'; // 重置游标
+  sortValue.value = null;
+  sortId.value = null;
   productList.value = [];
   hasMore.value = true;
   loadProducts();
@@ -119,41 +140,35 @@ const loadProducts = async () => {
   
   loading.value = true;
   try {
-    let response;
+    const params = {
+      sortType: sortType.value, // 查询排序方式：default, priceAsc, priceDesc, newest
+      categoryId: pageCategoryId.value, // 分类id
+      isFirstCategoryId: isFirstCategoryId.value, // 是否为一级分类id
+      sortValue: sortValue.value,
+      sortId: sortId.value,
+      querySize: querySize.value
+    };
     
-    // 统一调用分类商品列表接口，根据 sortType 进行排序
-    console.log('Using Category List API with sortType:', sortType.value);
-    response = await request({
-      url: `/api/category/product/list/${categoryId.value}/${beginProductId.value}`,
-      method: 'GET',
-      params: {
-        sortType: sortType.value
-      },
-      timeout: 20000
-    });
+    console.log('Using Category List API with params:', params);
+    const result = await productApi.getCategoryProducts(params);
     
-    if (response && response.success) {
-      const data = response.data;
-      // 如果 data 为 null，说明没有更多数据
-      if (!data) {
-        hasMore.value = false;
-        return;
-      }
-
-      const newProducts = data.productList || [];
+    if (result && result.success && result.data) {
+      const { list = [], isEnd, cursorCommonEntity } = result.data;
       
-      if (newProducts.length > 0) {
-        productList.value = [...productList.value, ...newProducts];
-        beginProductId.value = String(data.endProductId);
-        // 如果返回数量少于预期，或者没有返回 endProductId，可能没有更多了
-        if (!data.endProductId || newProducts.length === 0) {
-          hasMore.value = false;
+      if (list.length > 0) {
+        productList.value = [...productList.value, ...list];
+        // 更新滚动查询参数
+        if (cursorCommonEntity) {
+          sortValue.value = cursorCommonEntity.sortValue;
+          sortId.value = cursorCommonEntity.sortId;
         }
+        hasMore.value = !isEnd;
       } else {
         hasMore.value = false;
       }
     } else {
       uni.showToast({ title: '获取商品失败', icon: 'none' });
+      hasMore.value = false;
     }
 
   } catch (e) {
@@ -253,18 +268,106 @@ const goToDetail = (id) => {
 
 .product-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 30px;
-  padding: 40rpx;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 30rpx;
+  padding: 30rpx;
+}
+
+/* 渐入动画 */
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 骨架屏动画 */
+.pulse {
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 骨架屏样式 */
+.skeleton-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  padding: 20rpx;
+}
+
+@media (min-width: 1024px) {
+  .skeleton-list {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 30rpx;
+    padding: 30rpx;
+  }
+}
+
+.skeleton-item {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 12rpx;
+  overflow: hidden;
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 350rpx;
+}
+
+.skeleton-info {
+  padding: 20rpx;
+  display: flex;
+  flex-direction: column;
+}
+
+.skeleton-name {
+  height: 32rpx;
+  width: 90%;
+  margin-bottom: 15rpx;
+  border-radius: 4rpx;
+}
+
+.skeleton-desc {
+  height: 24rpx;
+  width: 70%;
+  margin-bottom: 15rpx;
+  border-radius: 4rpx;
+}
+
+.skeleton-price {
+  height: 36rpx;
+  width: 40%;
+  border-radius: 4rpx;
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 1023px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20rpx;
+    padding: 20rpx;
+  }
 }
 
 .product-item {
+  width: 100%;
   background-color: #fff;
   border-radius: 8px;
   overflow: hidden;
   transition: all 0.3s;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid #eee;
+  box-sizing: border-box;
 }
 
 .product-item:hover {
@@ -275,9 +378,15 @@ const goToDetail = (id) => {
 
 .product-img {
   width: 100%;
-  height: 280px;
+  height: 350rpx;
   background-color: #f0f0f0;
   object-fit: cover;
+}
+
+@media (min-width: 1024px) {
+  .product-img {
+    height: 400rpx;
+  }
 }
 
 .product-info {

@@ -83,21 +83,41 @@
 
     <!-- 热门产品推荐 (动态显示精选或分类商品) -->
     <view class="hot-product-container">
-      <view class="product-list">
-        <view 
-          class="product-item" 
-          v-for="(item, index) in displayProductList" 
-          :key="index" 
-          @click="goToProductDetail(item.id)"
-          hover-class="product-item-hover"
-          :hover-stay-time="150"
-        >
-          <image :src="item.imageUrl" mode="aspectFill" class="product-img"></image>
-          <view class="product-info">
-            <text class="product-name">{{item.name || ''}}</text>
-            <text class="product-sellPoint">{{item.sellPoint || ''}}</text>
-            <text class="product-price">¥{{(item.price || 0).toFixed(2)}}</text>
-            <text class="enterprise-tag" v-if="item.isEnterprisePrice">批量咨询价</text>
+      <view class="list-transition-wrapper">
+        <!-- 加载中状态 -->
+        <view class="list-loading" v-if="showLoading">
+          <view class="loading-item" v-for="i in 4" :key="i">
+            <view class="loading-img skeleton"></view>
+            <view class="loading-info">
+              <view class="loading-name skeleton"></view>
+              <view class="loading-price skeleton"></view>
+            </view>
+          </view>
+        </view>
+
+        <!-- 空状态 -->
+        <view class="list-empty" v-else-if="isDisplayListEmpty">
+          <image src="/static/images/empty-product.png" mode="aspectFit" class="empty-img"></image>
+          <text class="empty-text">暂无相关商品</text>
+        </view>
+
+        <!-- 商品列表 -->
+        <view class="product-list fade-in" v-else>
+          <view 
+            class="product-item" 
+            v-for="(item, index) in displayProductList" 
+            :key="item.id || index" 
+            @click="goToProductDetail(item.id)"
+            hover-class="product-item-hover"
+            :hover-stay-time="150"
+          >
+            <image :src="item.imageUrl" mode="aspectFill" class="product-img"></image>
+            <view class="product-info">
+              <text class="product-name">{{item.name || ''}}</text>
+              <text class="product-sellPoint">{{item.sellPoint || ''}}</text>
+              <text class="product-price">¥{{(item.price || 0).toFixed(2)}}</text>
+              <text class="enterprise-tag" v-if="item.isEnterprisePrice">批量咨询价</text>
+            </view>
           </view>
         </view>
       </view>
@@ -106,11 +126,11 @@
     <!-- 猜你喜欢 -->
     <view class="guess-like-container">
       <view class="section-title">猜你喜欢</view>
-      <view class="product-list">
+      <view class="product-list fade-in">
         <view 
           class="product-item" 
           v-for="(item, index) in guessLikeProductList" 
-          :key="index" 
+          :key="item.id || index" 
           @click="goToProductDetail(item.id)"
           hover-class="product-item-hover"
           :hover-stay-time="150"
@@ -153,6 +173,7 @@ const bannerList = ref([]); // 轮播图数据
 const categoryList = ref([]); // 分类数据
 const hotProductList = ref([]); // 热门产品数据
 const categoryProductList = ref([]); // 当前分类商品数据
+const isCategoryLoading = ref(false); // 分类商品加载状态
 const currentCategoryId = ref('0'); // 当前选中的分类ID，'0'表示精选
 const hotKeywordList = ref([]); // 热门关键词数据
 const guessLikeProductList = ref([]); // 猜你喜欢数据
@@ -164,6 +185,17 @@ const currentSwiperIndex = ref(0); // 当前轮播图索引
 // 计算属性：当前展示的商品列表
 const displayProductList = computed(() => {
   return currentCategoryId.value === '0' ? hotProductList.value : categoryProductList.value;
+});
+
+// 计算属性：是否显示加载中
+const showLoading = computed(() => {
+  return (currentCategoryId.value === '0' && hotProductList.value.length === 0) || 
+         (currentCategoryId.value !== '0' && isCategoryLoading.value);
+});
+
+// 计算属性：当前展示列表是否为空
+const isDisplayListEmpty = computed(() => {
+  return !showLoading.value && displayProductList.value.length === 0;
 });
 
 // 监听轮播图变化
@@ -329,6 +361,7 @@ const handleCategoryClick = async (categoryId) => {
 // 获取分类商品列表
 const getCategoryProductList = async (categoryId, forceRefresh = false) => {
   try {
+    isCategoryLoading.value = true;
     // 1. 尝试从缓存获取
     const cacheKey = `category_products_${categoryId}`;
     if (!forceRefresh) {
@@ -336,6 +369,7 @@ const getCategoryProductList = async (categoryId, forceRefresh = false) => {
       if (cachedData) {
         console.log(`从缓存获取分类 ${categoryId} 商品数据成功`);
         categoryProductList.value = cachedData;
+        isCategoryLoading.value = false;
         return;
       }
     }
@@ -343,19 +377,16 @@ const getCategoryProductList = async (categoryId, forceRefresh = false) => {
     console.log(`开始获取分类 ${categoryId} 商品数据...`);
     
     // 使用统一 request 工具
-    // 接口格式：/api/category/product/list/{categoryId}/{beginProductId}
-    // beginProductId 传 '0' 表示第一页
-    const result = await request({
-      url: `/api/category/product/list/${categoryId}/0`,
-      method: 'GET',
-      params: {
-        sortType: 'default'
-      },
-      timeout: 30000
+    // 接口格式：/api/product/categroy/list
+    const result = await productApi.getCategoryProducts({
+      sortType: 'default', // 首页默认排序
+      categoryId: categoryId, // 分类id
+      isFirstCategoryId: true, // 首页分类展示的商品是一级分类
+      querySize: 20
     });
     
-    if (result && result.success && result.data && Array.isArray(result.data.productList)) {
-      const productData = result.data.productList;
+    if (result && result.success && result.data && Array.isArray(result.data.list)) {
+      const productData = result.data.list;
       console.log(`提取到分类 ${categoryId} 商品数量:`, productData.length);
       
       const processedData = productData.map((item, index) => {
@@ -388,6 +419,8 @@ const getCategoryProductList = async (categoryId, forceRefresh = false) => {
     console.error(`获取分类 ${categoryId} 商品列表失败:`, error);
     categoryProductList.value = [];
     uni.showToast({ title: '加载分类商品失败', icon: 'none' });
+  } finally {
+    isCategoryLoading.value = false;
   }
 };
 
@@ -942,10 +975,9 @@ const goToProductDetail = (productId) => {
 </script>
 
 <style scoped>
-/* 全局样式 */
+/* 页面背景 */
 .index-container {
-  padding: 0; /* 首页容器不设 padding，由子组件控制 */
-  background-color: #FFFFFF;
+  background-color: #f8f8f8;
   min-height: 100vh;
 }
 
@@ -958,7 +990,7 @@ const goToProductDetail = (productId) => {
   padding-right: 30rpx;
 }
 
-/* Hero Section (得物风：深色展示区) */
+/* 顶部 Hero 区域 */
 .hero-section {
   background-color: #121212;
   /* 【高度调节】通过调整上下 padding 来控制黑色区域的高度 */
@@ -1176,39 +1208,154 @@ const goToProductDetail = (productId) => {
   flex: 1;
 }
 
+/* 列表过渡容器 */
+.list-transition-wrapper {
+  min-height: 600rpx;
+  background-color: #f8f8f8;
+  border-radius: 16rpx;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
 /* 热门产品样式 */
 .hot-product-container {
-  margin-bottom: 40rpx;
+  padding: 20rpx;
+  background-color: #f8f8f8;
 }
-.section-title {
-  font-size: 36rpx;
-  font-weight: 800;
-  color: #000000;
-  margin-bottom: 30rpx;
-  letter-spacing: 2rpx;
-  text-transform: uppercase;
-}
+
 .product-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  width: 100%;
 }
+
+/* PC端展示 5 列 */
+@media (min-width: 1024px) {
+  .product-list {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 24rpx;
+  }
+}
+
 .product-item {
-  width: 18.8%;
+  width: 100%;
   background-color: #FFFFFF;
-  border: 1rpx solid #EEEEEE;
-  border-radius: 4rpx;
+  border-radius: 12rpx;
   overflow: hidden;
-  margin-bottom: 24rpx;
-  margin-right: 1.5%;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
-  transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+  transition: all 0.3s ease;
+}
+
+/* 加载中状态样式 - 也要对应网格布局 */
+.list-loading {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20rpx;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .list-loading {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.loading-item {
+  background-color: #fff;
+  border-radius: 12rpx;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.loading-img {
+  width: 100%;
+  height: 340rpx;
+}
+
+.loading-info {
+  padding: 20rpx;
+}
+
+.loading-name {
+  height: 32rpx;
+  width: 80%;
+  margin-bottom: 15rpx;
+  border-radius: 4rpx;
+}
+.loading-price {
+  height: 40rpx;
+  width: 40%;
+  border-radius: 4rpx;
+}
+
+/* 空状态样式 */
+.list-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100rpx 0;
+}
+
+.empty-img {
+  width: 240rpx;
+  height: 240rpx;
+  margin-bottom: 20rpx;
+  opacity: 0.5;
+}
+
+.empty-text {
+  font-size: 28rpx;
+  color: #999;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 700;
+  color: #333333;
+  margin-bottom: 24rpx;
   position: relative;
-  top: 0;
+  padding-left: 20rpx;
+  display: flex;
+  align-items: center;
 }
-.product-item:nth-child(5n) {
-  margin-right: 0;
+
+.section-title::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  width: 8rpx;
+  height: 32rpx;
+  background-color: #000;
+  border-radius: 4rpx;
 }
+
+/* 渐入动画 */
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 骨架屏动画 */
+.skeleton {
+  background: linear-gradient(90deg, #f2f2f2 25%, #e6e6e6 37%, #f2f2f2 63%);
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 /* PC端悬停效果 */
 @media (min-width: 1024px) {
   .product-item:hover {
@@ -1273,6 +1420,8 @@ const goToProductDetail = (productId) => {
 
 /* 猜你喜欢样式 */
 .guess-like-container {
+  padding: 20rpx;
+  background-color: #f8f8f8;
   margin-bottom: 40rpx;
 }
 .loading-status {

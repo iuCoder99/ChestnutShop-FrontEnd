@@ -78,6 +78,18 @@ export const productApi = {
     url: '/api/user/product/comment/count/show',
     method: 'GET',
     params: { productId }
+  }),
+  // 获取相关推荐商品
+  getRelatedProducts: (productName, limit = 10) => request({
+    url: '/api/product/related',
+    method: 'GET',
+    params: { productName, limit }
+  }),
+  // 获取分类下商品列表 (支持滚动查询)
+  getCategoryProducts: (params) => request({
+    url: '/api/product/categroy/list',
+    method: 'GET',
+    params
   })
 };
 

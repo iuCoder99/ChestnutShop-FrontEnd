@@ -394,7 +394,7 @@ const loadProductDetail = async (isRefresh = false) => {
       cacheUtil.set(cacheKey, productDetail.value, 60);
 
       if (!isRefresh) {
-        loadRelatedProducts(productId);
+        loadRelatedProducts(productDetail.value.name);
         loadComments(productId);
         loadCommentCount(productId);
         startRefreshTimer();
@@ -467,14 +467,10 @@ const setupDefaultSpec = () => {
 };
 
 // 获取相关商品
-const loadRelatedProducts = async (productId) => {
-  if (!productId) return;
+const loadRelatedProducts = async (productName) => {
+  if (!productName) return;
   try {
-    const result = await request({
-      url: '/api/product/related',
-      method: 'GET',
-      params: { productId }
-    });
+    const result = await productApi.getRelatedProducts(productName, 5);
     if (result.success && result.data) {
       relatedProducts.value = Array.isArray(result.data) ? result.data : [result.data];
     }

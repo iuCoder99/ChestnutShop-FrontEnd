@@ -430,8 +430,16 @@ onMounted(() => {
 /* 简单网格布局 */
 .simple-grid {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 30px 10px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30rpx 20rpx;
+}
+
+/* PC端展示 5 列 */
+@media (min-width: 1024px) {
+  .simple-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 40rpx 20rpx;
+  }
 }
 
 .simple-grid-item {
@@ -447,15 +455,22 @@ onMounted(() => {
 }
 
 .item-icon-wrapper {
-  width: 80px;
-  height: 80px;
+  width: 100rpx;
+  height: 100rpx;
   background-color: #f8f8f8;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 15px;
+  margin-bottom: 15rpx;
   transition: all 0.3s;
+}
+
+@media (min-width: 1024px) {
+  .item-icon-wrapper {
+    width: 120rpx;
+    height: 120rpx;
+  }
 }
 
 .simple-grid-item:hover .item-icon-wrapper {

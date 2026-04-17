@@ -94,7 +94,6 @@ onLoad((options) => {
     return;
   }
   getProductDetail();
-  getRelatedProduct();
   // 开启分享
   uni.showShareMenu({ withShareTicket: true });
 });
@@ -107,12 +106,14 @@ const getProductDetail = async () => {
     const res = await request({
       url: '/api/product/detail',
       method: 'GET',
-      data: { productId }
+      data: { productId: productId.value }
     });
     if (res.success) {
       productInfo.value = res.data;
       currentPrice.value = res.data.price;
       currentStock.value = res.data.stock;
+      // 获取到详情后加载相关推荐
+      getRelatedProduct(res.data.name);
     }
   } catch (error) {
     uni.showToast({ title: '产品信息加载失败', icon: 'none' });
@@ -122,12 +123,13 @@ const getProductDetail = async () => {
 };
 
 // 获取相关推荐产品
-const getRelatedProduct = async () => {
+const getRelatedProduct = async (productName) => {
+  if (!productName) return;
   try {
     const res = await request({
       url: '/api/product/related',
       method: 'GET',
-      data: { productId }
+      data: { productName, limit: 10 }
     });
     if (res.success) {
       relatedProductList.value = res.data;

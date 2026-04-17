@@ -76,7 +76,7 @@
 
 <script setup>
 import { ref, computed } from 'vue';
-import { onLoad, onShow, onNavigationBarButtonTap } from '@dcloudio/uni-app';
+import { onLoad, onShow, onNavigationBarButtonTap, onReachBottom } from '@dcloudio/uni-app';
 import { useUserStore } from '@/store/modules/userStore';
 import { userApi, productApi } from '@/utils/api';
 
@@ -87,6 +87,10 @@ const isManageMode = ref(false); // 是否处于管理模式
 
 // 页面数据
 const collectionList = ref([]); // 收藏列表
+const isEnd = ref(false); // 是否已加载全部
+const sortValue = ref(null); // 滚动查询：排序值
+const sortId = ref(null); // 滚动查询：ID
+const querySize = ref(20); // 每次查询数量
 
 // 计算选中的数量
 const selectedCount = computed(() => {
@@ -128,19 +132,35 @@ onLoad(() => {
     return;
   }
   // 首次加载
-  getCollectionList();
+  refreshList();
 });
 
 onShow(() => {
   if (userStore.token) {
     // 每次显示页面时刷新列表，防止脏数据
-    getCollectionList();
+    // refreshList(); // 已经在 onLoad 调用，onShow 如果需要实时更新可以保留，但要注意分页状态
     // 恢复管理按钮状态
     if (!isManageMode.value) {
       // updateTitleButton(true);
     }
   }
 });
+
+// 触底加载更多
+onReachBottom(() => {
+  if (!isEnd.value && !isLoading.value) {
+    getCollectionList();
+  }
+});
+
+// 刷新列表
+const refreshList = async () => {
+  collectionList.value = [];
+  isEnd.value = false;
+  sortValue.value = null;
+  sortId.value = null;
+  await getCollectionList();
+};
 
 // 退出管理模式
 const exitManageMode = () => {
@@ -203,29 +223,31 @@ const batchDelete = async () => {
 
 // 接口请求：获取收藏列表
 const getCollectionList = async () => {
-  // if (isLoading.value) return; // 移除 loading 检查，允许静默刷新
+  if (isLoading.value || isEnd.value) return;
   isLoading.value = true;
   try {
-    // 1. 获取收藏的ID列表
-    const res = await userApi.getCollectList({ pageNum: 1, pageSize: 100 });
+    const params = {
+      sortValue: sortValue.value,
+      sortId: sortId.value,
+      querySize: querySize.value
+    };
+    const res = await userApi.getCollectList(params);
     if (res.success && res.data) {
-      const list = res.data.list || [];
-      const productIds = list.map(item => item.productId);
+      const { list = [], isEnd: endStatus, simpleCursorCommonEntity } = res.data;
       
-      if (productIds.length > 0) {
-        // 2. 获取商品简要信息
-        const productRes = await productApi.getProductBriefList(productIds);
-        if (productRes.success && productRes.data) {
-          // 初始化 checked 状态
-          collectionList.value = productRes.data.map(item => ({
-            ...item,
-            checked: false
-          }));
-        } else {
-           collectionList.value = [];
-        }
-      } else {
-        collectionList.value = [];
+      // 处理并追加数据
+      const newList = list.map(item => ({
+        ...item,
+        checked: false
+      }));
+      
+      collectionList.value = [...collectionList.value, ...newList];
+      isEnd.value = endStatus;
+      
+      // 更新滚动查询参数
+      if (simpleCursorCommonEntity) {
+        sortValue.value = simpleCursorCommonEntity.sortValue;
+        sortId.value = simpleCursorCommonEntity.sortId;
       }
     }
   } catch (error) {
