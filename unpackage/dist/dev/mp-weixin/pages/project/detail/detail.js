@@ -36,7 +36,6 @@ const _sfc_main = {
         return;
       }
       getProductDetail();
-      getRelatedProduct();
       common_vendor.index.showShareMenu({ withShareTicket: true });
     });
     const getProductDetail = async () => {
@@ -45,12 +44,13 @@ const _sfc_main = {
         const res = await utils_request.request({
           url: "/api/product/detail",
           method: "GET",
-          data: { productId }
+          data: { productId: productId.value }
         });
         if (res.success) {
           productInfo.value = res.data;
           currentPrice.value = res.data.price;
           currentStock.value = res.data.stock;
+          getRelatedProduct(res.data.name);
         }
       } catch (error) {
         common_vendor.index.showToast({ title: "产品信息加载失败", icon: "none" });
@@ -58,18 +58,20 @@ const _sfc_main = {
         common_vendor.index.hideLoading();
       }
     };
-    const getRelatedProduct = async () => {
+    const getRelatedProduct = async (productName) => {
+      if (!productName)
+        return;
       try {
         const res = await utils_request.request({
           url: "/api/product/related",
           method: "GET",
-          data: { productId }
+          data: { productName, limit: 10 }
         });
         if (res.success) {
           relatedProductList.value = res.data;
         }
       } catch (error) {
-        common_vendor.index.__f__("log", "at pages/project/detail/detail.vue:136", "相关推荐加载失败", error);
+        common_vendor.index.__f__("log", "at pages/project/detail/detail.vue:138", "相关推荐加载失败", error);
       }
     };
     const handleSpecChange = async (specIds) => {

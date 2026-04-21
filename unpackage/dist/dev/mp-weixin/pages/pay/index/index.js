@@ -129,7 +129,7 @@ const _sfc_main = {
         c: common_assets._imports_0$7,
         d: selectedPayMethod.value === "WECHAT_PAY"
       }, selectedPayMethod.value === "WECHAT_PAY" ? {
-        e: common_assets._imports_1$2
+        e: common_assets._imports_1$3
       } : {}, {
         f: common_vendor.o(($event) => selectPayMethod("WECHAT_PAY"), "69"),
         g: countdownText.value

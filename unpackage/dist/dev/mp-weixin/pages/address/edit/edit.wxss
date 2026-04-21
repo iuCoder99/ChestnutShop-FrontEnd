@@ -1,28 +1,38 @@
 
 .address-edit-container.data-v-460af471 {
-  background-color: #F8F8F8;
+  background-color: #F8F9FA;
   min-height: 100vh;
-  padding-bottom: 60rpx;
+  padding-bottom: 80rpx;
 }
 
 /* 页面头部 */
 .page-header.data-v-460af471 {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20rpx 30rpx;
-  padding-top: 40rpx;
   background-color: #FFFFFF;
   position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 100;
+  padding-top: env(safe-area-inset-top);
+  box-shadow: 0 2rpx 10rpx rgba(0, 0, 0, 0.05);
 }
-.back-area.data-v-460af471 {
-  width: 80rpx;
-  height: 80rpx;
+.header-content.data-v-460af471 {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  height: 88rpx;
+  padding: 0 30rpx;
+}
+.back-area.data-v-460af471 {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+}
+.back-area.data-v-460af471:active {
+  background-color: #F5F5F5;
 }
 .back-icon.data-v-460af471 {
   width: 40rpx;
@@ -30,64 +40,88 @@
 }
 .header-title.data-v-460af471 {
   font-size: 34rpx;
-  font-weight: bold;
-  color: #333333;
+  font-weight: 800;
+  color: #1A1A1A;
 }
 .save-area.data-v-460af471 {
-  width: 80rpx;
-  height: 80rpx;
+  min-width: 100rpx;
+  height: 60rpx;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  transition: opacity 0.2s;
+}
+.save-area.data-v-460af471:active {
+  opacity: 0.7;
+}
+.save-area.disabled.data-v-460af471 {
+  opacity: 0.3;
 }
 .save-text.data-v-460af471 {
   font-size: 30rpx;
   color: #D4B886;
-  font-weight: 500;
-}
-.save-area.disabled.data-v-460af471 {
-  opacity: 0.5;
+  font-weight: 700;
 }
 
 /* 表单区域 */
-.address-form.data-v-460af471 {
-  padding: 20rpx 0;
+.form-container.data-v-460af471 {
+  padding: 30rpx;
 }
-.form-group.data-v-460af471 {
+.form-card.data-v-460af471 {
   background-color: #FFFFFF;
-  margin-bottom: 20rpx;
-  padding: 0 32rpx;
+  border-radius: 24rpx;
+  padding: 0 30rpx;
+  margin-bottom: 30rpx;
+  box-shadow: 0 4rpx 20rpx rgba(0, 0, 0, 0.03);
 }
 .form-item.data-v-460af471 {
+  padding: 36rpx 0;
+  border-bottom: 1rpx solid #F5F6F7;
   display: flex;
-  align-items: center;
-  padding: 32rpx 0;
-  border-bottom: 1rpx solid #F5F5F5;
+  flex-direction: column;
 }
 .form-item.no-border.data-v-460af471 {
   border-bottom: none;
 }
+.label-row.data-v-460af471 {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
 .form-label.data-v-460af471 {
-  width: 180rpx;
   font-size: 30rpx;
-  color: #333333;
+  color: #1A1A1A;
+  font-weight: 800;
+}
+.required-dot.data-v-460af471 {
+  color: #F53F3F;
+  margin-left: 6rpx;
+  font-size: 24rpx;
+}
+.input-wrapper.data-v-460af471 {
+  position: relative;
+  width: 100%;
 }
 .form-input.data-v-460af471 {
-  flex: 1;
+  width: 100%;
   font-size: 30rpx;
   color: #333333;
 }
 .form-textarea.data-v-460af471 {
-  flex: 1;
+  width: 100%;
   font-size: 30rpx;
   color: #333333;
-  min-height: 80rpx;
+  min-height: 120rpx;
   padding: 10rpx 0;
+  line-height: 1.6;
+}
+.placeholder-style.data-v-460af471 {
+  color: #999999;
+  font-size: 28rpx;
 }
 
-/* 省市区选择 */
-.area-picker.data-v-460af471 {
-  flex: 1;
+/* 地区选择器 */
+.picker-wrapper.data-v-460af471 {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -101,36 +135,67 @@
   color: #999999;
 }
 .arrow-icon.data-v-460af471 {
-  width: 32rpx;
-  height: 32rpx;
+  width: 24rpx;
+  height: 24rpx;
   opacity: 0.3;
+}
+.error-msg.data-v-460af471 {
+  font-size: 22rpx;
+  color: #F53F3F;
+  margin-top: 10rpx;
+  display: block;
 }
 
 /* 默认地址选项 */
-.default-item.data-v-460af471 {
-  flex-direction: row;
+.default-card.data-v-460af471 {
+  padding: 30rpx;
+}
+.default-row.data-v-460af471 {
+  display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 20rpx;
-  border-bottom: none;
 }
-.default-text.data-v-460af471 {
-  font-size: 28rpx;
-  color: #333333;
+.default-info.data-v-460af471 {
+  display: flex;
+  flex-direction: column;
+  gap: 6rpx;
+}
+.default-label.data-v-460af471 {
+  font-size: 30rpx;
+  color: #1A1A1A;
+  font-weight: 800;
+}
+.default-tip.data-v-460af471 {
+  font-size: 24rpx;
+  color: #999999;
+}
+.custom-switch.data-v-460af471 {
+  transform: scale(0.9);
 }
 
-/* 删除区域 */
-.delete-area.data-v-460af471 {
-  margin-top: 40rpx;
-  background-color: #FFFFFF;
-  padding: 32rpx 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+/* 删除按钮 */
+.delete-section.data-v-460af471 {
+  margin-top: 60rpx;
+  padding: 0 20rpx;
 }
-.delete-text.data-v-460af471 {
-  font-size: 30rpx;
+.delete-btn.data-v-460af471 {
+  width: 100%;
+  height: 90rpx;
+  background-color: #FFFFFF;
   color: #F53F3F;
+  border-radius: 45rpx;
+  font-size: 30rpx;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1rpx solid #FFEDED;
+  box-shadow: 0 4rpx 12rpx rgba(245, 63, 63, 0.05);
+  transition: all 0.2s;
+}
+.delete-btn.data-v-460af471:active {
+  background-color: #FFF5F5;
+  transform: translateY(2rpx);
 }
 
 /* 省市区选择器弹窗 */
@@ -148,15 +213,16 @@
 }
 .picker-container.data-v-460af471 {
   background-color: #FFFFFF;
-  border-top-left-radius: 32rpx;
-  border-top-right-radius: 32rpx;
-  padding-bottom: 60rpx;
+  border-top-left-radius: 40rpx;
+  border-top-right-radius: 40rpx;
+  padding-bottom: env(safe-area-inset-bottom);
+  overflow: hidden;
 }
 .picker-header.data-v-460af471 {
   display: flex;
   justify-content: space-between;
-  padding: 32rpx 40rpx;
-  border-bottom: 1rpx solid #F5F5F5;
+  padding: 36rpx 40rpx;
+  border-bottom: 1rpx solid #F5F6F7;
 }
 .picker-cancel.data-v-460af471, .picker-confirm.data-v-460af471 {
   font-size: 32rpx;
@@ -170,7 +236,7 @@
 }
 .picker-confirm.data-v-460af471 {
   color: #D4B886;
-  font-weight: bold;
+  font-weight: 800;
 }
 .picker-view.data-v-460af471 {
   width: 100%;
@@ -181,5 +247,5 @@
   align-items: center;
   justify-content: center;
   font-size: 32rpx;
-  color: #333333;
+  color: #1A1A1A;
 }

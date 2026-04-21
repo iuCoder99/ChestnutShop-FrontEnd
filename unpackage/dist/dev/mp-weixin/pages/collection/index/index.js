@@ -9,6 +9,10 @@ const _sfc_main = {
     const isLoading = common_vendor.ref(false);
     const isManageMode = common_vendor.ref(false);
     const collectionList = common_vendor.ref([]);
+    const isEnd = common_vendor.ref(false);
+    const sortValue = common_vendor.ref(null);
+    const sortId = common_vendor.ref(null);
+    const querySize = common_vendor.ref(20);
     const selectedCount = common_vendor.computed(() => {
       return collectionList.value.filter((item) => item.checked).length;
     });
@@ -32,15 +36,26 @@ const _sfc_main = {
         common_vendor.index.navigateTo({ url: "/pages/main/login/login" });
         return;
       }
-      getCollectionList();
+      refreshList();
     });
     common_vendor.onShow(() => {
       if (userStore.token) {
-        getCollectionList();
         if (!isManageMode.value)
           ;
       }
     });
+    common_vendor.onReachBottom(() => {
+      if (!isEnd.value && !isLoading.value) {
+        getCollectionList();
+      }
+    });
+    const refreshList = async () => {
+      collectionList.value = [];
+      isEnd.value = false;
+      sortValue.value = null;
+      sortId.value = null;
+      await getCollectionList();
+    };
     const exitManageMode = () => {
       isManageMode.value = false;
       collectionList.value.forEach((item) => item.checked = false);
@@ -77,7 +92,7 @@ const _sfc_main = {
                 }
               }
             } catch (error) {
-              common_vendor.index.__f__("error", "at pages/collection/index/index.vue:195", "批量删除失败:", error);
+              common_vendor.index.__f__("error", "at pages/collection/index/index.vue:215", "批量删除失败:", error);
             } finally {
               common_vendor.index.hideLoading();
             }
@@ -86,28 +101,31 @@ const _sfc_main = {
       });
     };
     const getCollectionList = async () => {
+      if (isLoading.value || isEnd.value)
+        return;
       isLoading.value = true;
       try {
-        const res = await utils_api.userApi.getCollectList({ pageNum: 1, pageSize: 100 });
+        const params = {
+          sortValue: sortValue.value,
+          sortId: sortId.value,
+          querySize: querySize.value
+        };
+        const res = await utils_api.userApi.getCollectList(params);
         if (res.success && res.data) {
-          const list = res.data.list || [];
-          const productIds = list.map((item) => item.productId);
-          if (productIds.length > 0) {
-            const productRes = await utils_api.productApi.getProductBriefList(productIds);
-            if (productRes.success && productRes.data) {
-              collectionList.value = productRes.data.map((item) => ({
-                ...item,
-                checked: false
-              }));
-            } else {
-              collectionList.value = [];
-            }
-          } else {
-            collectionList.value = [];
+          const { list = [], isEnd: endStatus, simpleCursorCommonEntity } = res.data;
+          const newList = list.map((item) => ({
+            ...item,
+            checked: false
+          }));
+          collectionList.value = [...collectionList.value, ...newList];
+          isEnd.value = endStatus;
+          if (simpleCursorCommonEntity) {
+            sortValue.value = simpleCursorCommonEntity.sortValue;
+            sortId.value = simpleCursorCommonEntity.sortId;
           }
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/collection/index/index.vue:232", "获取收藏列表失败:", error);
+        common_vendor.index.__f__("error", "at pages/collection/index/index.vue:254", "获取收藏列表失败:", error);
       } finally {
         isLoading.value = false;
       }
@@ -137,7 +155,7 @@ const _sfc_main = {
                 collectionList.value.splice(index, 1);
               }
             } catch (error) {
-              common_vendor.index.__f__("error", "at pages/collection/index/index.vue:266", "取消收藏失败:", error);
+              common_vendor.index.__f__("error", "at pages/collection/index/index.vue:288", "取消收藏失败:", error);
             } finally {
               common_vendor.index.hideLoading();
             }

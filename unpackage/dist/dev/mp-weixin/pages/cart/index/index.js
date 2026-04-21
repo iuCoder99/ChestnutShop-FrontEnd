@@ -14,7 +14,6 @@ const _sfc_main = {
     const cartStore = store_modules_cartStore.useCartStore();
     const userStore = store_modules_userStore.useUserStore();
     const cartList = common_vendor.ref([]);
-    const isEditing = common_vendor.ref(false);
     const originalCartList = common_vendor.ref([]);
     const hasChanged = common_vendor.computed(() => {
       if (cartList.value.length !== originalCartList.value.length)
@@ -26,19 +25,24 @@ const _sfc_main = {
     });
     const isAllSelected = common_vendor.computed({
       get: () => {
-        return cartList.value.length > 0 && cartList.value.every((item) => item.checked);
+        const purchasableItems = cartList.value.filter((item) => item.stock > 0);
+        if (purchasableItems.length === 0)
+          return false;
+        return purchasableItems.every((item) => item.checked);
       },
       set: (val) => {
         cartList.value.forEach((item) => {
-          item.checked = val;
+          if (item.stock > 0) {
+            item.checked = val;
+          }
         });
       }
     });
     const selectedCount = common_vendor.computed(() => {
-      return cartList.value.reduce((total, item) => total + item.quantity, 0);
+      return cartList.value.filter((item) => item.stock > 0 && item.checked).reduce((total, item) => total + item.quantity, 0);
     });
     const totalPrice = common_vendor.computed(() => {
-      return cartList.value.reduce((total, item) => total + item.price * item.quantity, 0);
+      return cartList.value.filter((item) => item.stock > 0 && item.checked).reduce((total, item) => total + item.price * item.quantity, 0);
     });
     common_vendor.computed(() => {
       return cartList.value.reduce((total, item) => total + item.quantity, 0);
@@ -51,19 +55,18 @@ const _sfc_main = {
           method: "GET"
         });
         if (res && res.success && Array.isArray(res.data)) {
-          common_vendor.index.__f__("log", "at pages/cart/index/index.vue:144", "购物车数据请求成功:", res.data);
+          common_vendor.index.__f__("log", "at pages/cart/index/index.vue:199", "购物车数据请求成功:", res.data);
           cartList.value = res.data.map((item) => ({
             ...item,
-            checked: false,
-            // 确保价格和数量是数值
+            // 有库存的默认选中，没库存的不选中
+            checked: item.stock > 0,
             price: Number(item.price) || 0,
             quantity: Number(item.quantity) || 1,
-            // 确保规格文本存在
             specText: item.specText || "默认规格"
           }));
           originalCartList.value = JSON.parse(JSON.stringify(cartList.value));
         } else {
-          common_vendor.index.__f__("warn", "at pages/cart/index/index.vue:157", "购物车数据格式异常或请求失败:", res);
+          common_vendor.index.__f__("warn", "at pages/cart/index/index.vue:211", "购物车数据格式异常或请求失败:", res);
           cartList.value = [];
         }
       } catch (error) {
@@ -72,17 +75,15 @@ const _sfc_main = {
         common_vendor.index.hideLoading();
       }
     };
-    const toggleEditing = () => {
-      isEditing.value = !isEditing.value;
-      if (isEditing.value) {
-        cartList.value.forEach((item) => item.checked = false);
-      }
-    };
     const handleAllSelect = () => {
-      isAllSelected.value = !isAllSelected.value;
+      const targetValue = !isAllSelected.value;
+      isAllSelected.value = targetValue;
     };
     const handleItemSelect = (index) => {
-      cartList.value[index].checked = !cartList.value[index].checked;
+      const item = cartList.value[index];
+      if (item.stock > 0) {
+        item.checked = !item.checked;
+      }
     };
     let debounceTimer = null;
     const handleQuantityChange = (index, type) => {
@@ -199,7 +200,6 @@ const _sfc_main = {
         return;
       cartList.value = cartList.value.filter((item) => !item.checked);
       common_vendor.index.showToast({ title: "已移除，请记得保存", icon: "none" });
-      isEditing.value = false;
     };
     const performSettle = (items) => {
       common_vendor.index.navigateTo({
@@ -207,13 +207,9 @@ const _sfc_main = {
       });
     };
     const goToConfirmOrder = () => {
-      const selectedItems = cartList.value.filter((item) => item.checked);
-      let itemsToSettle = selectedItems;
-      if (!isEditing.value && selectedItems.length === 0) {
-        itemsToSettle = cartList.value;
-      }
-      if (itemsToSettle.length === 0) {
-        common_vendor.index.showToast({ title: "购物车是空的", icon: "none" });
+      const selectedItems = cartList.value.filter((item) => item.checked && item.stock > 0);
+      if (selectedItems.length === 0) {
+        common_vendor.index.showToast({ title: "请选择要结算的商品", icon: "none" });
         return;
       }
       if (hasChanged.value) {
@@ -226,12 +222,12 @@ const _sfc_main = {
             if (res.confirm) {
               handleSave();
             } else {
-              performSettle(itemsToSettle);
+              performSettle(selectedItems);
             }
           }
         });
       } else {
-        performSettle(itemsToSettle);
+        performSettle(selectedItems);
       }
     };
     const goHome = () => {
@@ -255,7 +251,7 @@ const _sfc_main = {
           const tempCart = common_vendor.index.getStorageSync("cartTemp") || [];
           cartList.value = tempCart.map((item) => ({
             ...item,
-            checked: false,
+            checked: true,
             price: Number(item.price) || 0,
             quantity: Number(item.quantity) || 1
           }));
@@ -274,60 +270,67 @@ const _sfc_main = {
         a: common_vendor.p({
           activePage: "cart"
         }),
-        b: cartList.value.length === 0
+        b: cartList.value.length > 0
+      }, cartList.value.length > 0 ? {} : {}, {
+        c: cartList.value.length === 0
       }, cartList.value.length === 0 ? {
-        c: common_assets._imports_1,
-        d: common_vendor.o(goHome, "be")
+        d: common_assets._imports_1,
+        e: common_vendor.o(goHome, "b1")
       } : common_vendor.e({
-        e: isEditing.value
-      }, isEditing.value ? {
-        f: isAllSelected.value,
-        g: common_vendor.o(handleAllSelect, "47")
+        f: isAllSelected.value
+      }, isAllSelected.value ? {} : {}, {
+        g: isAllSelected.value ? 1 : "",
+        h: common_vendor.o(handleAllSelect, "88"),
+        i: selectedCount.value > 0
+      }, selectedCount.value > 0 ? {
+        j: common_vendor.t(selectedCount.value)
       } : {}, {
-        h: !isEditing.value
-      }, !isEditing.value ? {
-        i: common_vendor.o(toggleEditing, "96")
-      } : {
-        j: common_vendor.o(toggleEditing, "8c"),
-        k: common_vendor.o(showDeleteModal, "61")
-      }, {
-        l: common_vendor.f(cartList.value, (item, index, i0) => {
-          return common_vendor.e(isEditing.value ? {
-            a: item.checked,
-            b: common_vendor.o(($event) => handleItemSelect(index), index)
+        k: selectedCount.value > 0 ? 1 : "",
+        l: common_vendor.o(showDeleteModal, "aa"),
+        m: common_vendor.f(cartList.value, (item, index, i0) => {
+          return common_vendor.e({
+            a: item.checked
+          }, item.checked ? {} : {}, {
+            b: item.checked ? 1 : "",
+            c: item.stock <= 0 ? 1 : "",
+            d: common_vendor.o(($event) => item.stock > 0 ? handleItemSelect(index) : null, index),
+            e: item.productImage,
+            f: item.stock <= 0
+          }, item.stock <= 0 ? {} : {}, {
+            g: common_vendor.t(item.productName),
+            h: common_vendor.t(item.specText),
+            i: common_vendor.t(item.price.toFixed(2)),
+            j: common_vendor.o(($event) => goToProductDetail(item.productId), index),
+            k: item.stock > 0
+          }, item.stock > 0 ? {
+            l: item.quantity <= 1 ? 1 : "",
+            m: common_vendor.o(($event) => handleQuantityChange(index, "minus"), index),
+            n: item.quantity,
+            o: common_vendor.o((e) => handleQuantityInput(index, e), index),
+            p: common_vendor.o(() => {
+            }, index),
+            q: item.quantity >= item.stock ? 1 : "",
+            r: common_vendor.o(($event) => handleQuantityChange(index, "plus"), index)
           } : {}, {
-            c: item.productImage,
-            d: common_vendor.t(item.productName),
-            e: common_vendor.o(($event) => goToProductDetail(item.productId), index),
-            f: common_vendor.t(item.specText),
-            g: common_vendor.t(item.price.toFixed(2)),
-            h: common_vendor.o(($event) => handleQuantityChange(index, "minus"), index),
-            i: item.quantity <= 1,
-            j: item.quantity,
-            k: common_vendor.o((e) => handleQuantityInput(index, e), index),
-            l: common_vendor.o(($event) => handleQuantityChange(index, "plus"), index),
-            m: item.quantity >= item.stock
-          }, !isEditing.value ? {
-            n: common_vendor.o(($event) => deleteSingleItem(index), index)
-          } : {}, {
-            o: index
+            s: common_vendor.o(($event) => deleteSingleItem(index), index),
+            t: index,
+            v: item.stock <= 0 ? 1 : ""
           });
-        }),
-        m: isEditing.value,
-        n: !isEditing.value
+        })
       }), {
-        o: cartList.value.length > 0
-      }, cartList.value.length > 0 ? {
-        p: common_vendor.t(totalPrice.value.toFixed(2)),
-        q: hasChanged.value ? 1 : "",
-        r: !hasChanged.value,
-        s: common_vendor.o(handleRollback, "2a"),
-        t: hasChanged.value ? 1 : "",
-        v: !hasChanged.value,
-        w: common_vendor.o(handleSave, "bc"),
-        x: common_vendor.o(goToConfirmOrder, "e7"),
-        y: selectedCount.value <= 0 || isEditing.value
-      } : {});
+        n: cartList.value.length > 0
+      }, cartList.value.length > 0 ? common_vendor.e({
+        o: common_vendor.t(totalPrice.value.toFixed(2)),
+        p: common_vendor.t(selectedCount.value),
+        q: hasChanged.value
+      }, hasChanged.value ? {
+        r: common_vendor.o(handleRollback, "8a"),
+        s: common_vendor.o(handleSave, "3c")
+      } : {
+        t: common_vendor.t(selectedCount.value),
+        v: selectedCount.value > 0 ? 1 : "",
+        w: common_vendor.o(goToConfirmOrder, "8a")
+      }) : {});
     };
   }
 };

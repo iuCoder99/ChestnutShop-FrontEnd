@@ -177,6 +177,8 @@ const isCategoryLoading = ref(false); // 分类商品加载状态
 const currentCategoryId = ref('0'); // 当前选中的分类ID，'0'表示精选
 const hotKeywordList = ref([]); // 热门关键词数据
 const guessLikeProductList = ref([]); // 猜你喜欢数据
+const guessLikeBeginId = ref(null); // 猜你喜欢滚动查询开始ID
+const guessLikeIsEnd = ref(false); // 猜你喜欢是否加载完毕
 const noticeContent = ref(''); // 公告内容
 const isLoadingGuessLike = ref(false); // 是否正在加载猜你喜欢数据
 const showBackTop = ref(false); // 是否显示回到顶部按钮
@@ -634,73 +636,37 @@ const getHotProductList = async (forceRefresh = false) => {
     console.log('开始获取热门产品数据...');
     
     // 使用统一 request 工具
-    const result = await request({
-      url: '/api/product/hot',
-      method: 'GET',
-      timeout: 30000
+    const result = await productApi.getHotProductList({
+      limit: 10
     });
     
     // 检查响应是否成功
-    if (result) {
-      // 处理响应数据，根据用户提供的后端代码，后端返回的格式是 {success: boolean, data: Array}
-      let productData = [];
-      if (result && result.data) {
-        // 确保数据是数组
-        productData = Array.isArray(result.data) ? result.data : [result.data];
-      } else if (result && Array.isArray(result)) {
-        // 如果直接返回数组
-        productData = result;
-      } else if (result && typeof result === 'object') {
-        productData = [result];
-      }
+    if (result && result.success && result.data) {
+      const productData = Array.isArray(result.data) ? result.data : [result.data];
       
       console.log('提取到的热门产品数据:', JSON.stringify(productData, null, 2));
       console.log('热门产品数据数量:', productData.length);
       
       // 处理每个产品项
       const processedData = productData.map((item, index) => {
-        console.log(`第${index+1}个热门产品原始数据:`, JSON.stringify(item, null, 2));
-        
-        // 确保item是对象
-        if (typeof item !== 'object' || item === null) {
-          return {
-            id: String(index),
-            name: `产品${index+1}`,
-            imageUrl: 'https://via.placeholder.com/200x200?text=Product',
-            price: 0,
-            sellPoint: '',
-            isEnterprisePrice: false
-          };
-        }
-        
         // 处理图片URL
-        let imgUrl = item.image || item.imageUrl || item.image_url || item.imgUrl || item.img_url || '';
+        let imgUrl = item.image || item.imageUrl || '';
         if (typeof imgUrl === 'string') {
-          console.log(`原始产品图片URL: "${imgUrl}"`);
-          // 移除反引号和首尾空格
           imgUrl = imgUrl.replace(/`/g, '').trim();
-          console.log(`清理后的产品图片URL: "${imgUrl}"`);
-          // 添加默认图片URL
           if (!imgUrl) {
             imgUrl = 'https://via.placeholder.com/200x200?text=Product';
-            console.log(`使用默认产品图片URL: "${imgUrl}"`);
           }
         } else {
           imgUrl = 'https://via.placeholder.com/200x200?text=Product';
         }
         
-        // 处理价格字段
-        let price = item.price || item.unit_price || item.amount || 0;
-        // 确保价格是数字
-        price = typeof price === 'number' ? price : parseFloat(price) || 0;
-        
         return {
-          id: String(item.id || item.productId || index),
+          id: String(item.id || index),
           name: item.name || item.title || `产品${index+1}`,
           imageUrl: imgUrl,
-          price: price,
-          sellPoint: item.sellPoint || item.description || item.detail || '',
-          isEnterprisePrice: item.isEnterprisePrice || item.is_enterprise_price || false
+          price: parseFloat(item.price) || 0,
+          sellPoint: item.sellPoint || item.description || '',
+          isEnterprisePrice: item.isEnterprisePrice || false
         };
       });
       
@@ -757,24 +723,39 @@ const getGuessLikeProductList = async (append = false, forceRefresh = false) => 
       }
     }
 
+    if (forceRefresh) {
+      guessLikeBeginId.value = null;
+      guessLikeIsEnd.value = false;
+    }
+
+    // 如果之前已经加载完毕，且现在是追加模式，则重置 beginId 实现无限循环刷新
+    if (guessLikeIsEnd.value && append) {
+      console.log('--- [猜你喜欢] 已触底，重置 beginId 实现无限刷新');
+      guessLikeBeginId.value = null;
+      guessLikeIsEnd.value = false;
+    }
+
     isLoadingGuessLike.value = true;
-    console.log('--- [猜你喜欢] 开始请求数据, append:', append);
+    console.log('--- [猜你喜欢] 开始请求数据, append:', append, 'beginId:', guessLikeBeginId.value);
     
-    const result = await productApi.getScrollProductList();
+    const params = {
+      beginId: guessLikeBeginId.value,
+      querySize: 20 // 首页加载适量
+    };
+
+    const result = await productApi.getScrollProductList(params);
     console.log('--- [猜你喜欢] 接口返回原始数据:', JSON.stringify(result));
     
     // 灵活处理不同的返回格式
     let productData = [];
-    if (result) {
-      if (result.data && Array.isArray(result.data.productList)) {
-        productData = result.data.productList;
-        console.log('--- [猜你喜欢] 从 result.data.productList 获取到数据');
-      } else if (result.data && Array.isArray(result.data)) {
-        productData = result.data;
-        console.log('--- [猜你喜欢] 从 result.data 获取到数据');
-      } else if (Array.isArray(result)) {
-        productData = result;
-        console.log('--- [猜你喜欢] 直接从 result 获取到数据');
+    let isEnd = true;
+    let nextBeginId = null;
+
+    if (result && result.success && result.data) {
+      productData = result.data.list || [];
+      isEnd = result.data.isEnd;
+      if (result.data.simpleCursorCommonEntity) {
+        nextBeginId = result.data.simpleCursorCommonEntity.sortId;
       }
     }
     
@@ -782,8 +763,8 @@ const getGuessLikeProductList = async (append = false, forceRefresh = false) => 
     
     if (productData.length > 0) {
       const processedData = productData.map((item, index) => {
-        // 兼容不同的图片字段名
-        let imgUrl = item.image || item.imageUrl || item.imgUrl || item.image_url || '';
+        // 处理图片URL
+        let imgUrl = item.image || item.imageUrl || '';
         if (typeof imgUrl === 'string') {
           imgUrl = imgUrl.replace(/`/g, '').trim();
           if (!imgUrl) {
@@ -793,19 +774,13 @@ const getGuessLikeProductList = async (append = false, forceRefresh = false) => 
           imgUrl = 'https://via.placeholder.com/200x200?text=Product';
         }
         
-        // 确保价格是数字
-        let price = item.price;
-        if (typeof price === 'string') {
-          price = parseFloat(price.replace(/[^\d.]/g, ''));
-        }
-        
         return {
           id: String(item.id || index),
           name: item.name || item.title || `产品${index+1}`,
           imageUrl: imgUrl,
-          price: price || 0,
-          sellPoint: item.description || item.sellPoint || item.subTitle || '',
-          isEnterprisePrice: item.isEnterprisePrice || item.is_enterprise_price || false
+          price: parseFloat(item.price) || 0,
+          sellPoint: item.sellPoint || item.description || '',
+          isEnterprisePrice: item.isEnterprisePrice || false
         };
       });
       
@@ -816,8 +791,15 @@ const getGuessLikeProductList = async (append = false, forceRefresh = false) => 
         // 2. 保存到缓存 (30分钟)
         cacheUtil.set('home_guess_like', processedData, 30);
       }
-      console.log('--- [猜你喜欢] 数据处理完成, 当前列表总数:', guessLikeProductList.value.length);
+      
+      // 更新分页状态
+      guessLikeBeginId.value = isEnd ? null : nextBeginId;
+      guessLikeIsEnd.value = isEnd;
+      
+      console.log('--- [猜你喜欢] 数据处理完成, nextBeginId:', guessLikeBeginId.value, 'isEnd:', isEnd);
     } else {
+      guessLikeIsEnd.value = true;
+      guessLikeBeginId.value = null; // 没数据了也重置，下次从头开始
       console.warn('--- [猜你喜欢] 未提取到有效的商品数组');
     }
   } catch (error) {

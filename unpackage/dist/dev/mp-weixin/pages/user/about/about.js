@@ -31,7 +31,7 @@ const _sfc_main = {
           brandInfo.value = res.data;
         }
       } catch (error) {
-        common_vendor.index.__f__("log", "at pages/user/about/about.vue:92", "品牌信息加载失败", error);
+        common_vendor.index.__f__("log", "at pages/user/about/about.vue:131", "品牌信息加载失败", error);
       }
     };
     const makePhoneCall = () => {
@@ -81,23 +81,23 @@ const _sfc_main = {
       } : {}, {
         f: brandInfo.value.serviceHotline
       }, brandInfo.value.serviceHotline ? {
-        g: common_assets._imports_3$3,
+        g: common_assets._imports_3$1,
         h: common_vendor.t(brandInfo.value.serviceHotline),
-        i: common_assets._imports_1$3,
-        j: common_vendor.o(makePhoneCall, "fe")
+        i: common_assets._imports_1$4,
+        j: common_vendor.o(makePhoneCall, "56")
       } : {}, {
         k: brandInfo.value.officialWechat
       }, brandInfo.value.officialWechat ? {
-        l: common_assets._imports_2$1,
+        l: common_assets._imports_2$2,
         m: common_vendor.t(brandInfo.value.officialWechat),
-        n: common_vendor.o(copyWechat, "36")
+        n: common_vendor.o(copyWechat, "77")
       } : {}, {
         o: brandInfo.value.address
       }, brandInfo.value.address ? {
-        p: common_assets._imports_3$2,
+        p: common_assets._imports_3$3,
         q: common_vendor.t(brandInfo.value.address),
-        r: common_assets._imports_1$3,
-        s: common_vendor.o(openMap, "21")
+        r: common_assets._imports_1$4,
+        s: common_vendor.o(openMap, "4f")
       } : {}, {
         t: brandInfo.value.copyrightInfo
       }, brandInfo.value.copyrightInfo ? {

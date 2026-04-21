@@ -62,6 +62,36 @@ const productApi = {
   getHotKeywords: () => utils_request.request({
     url: "/api/product/user/keyword/list",
     method: "GET"
+  }),
+  // 评论点赞/取消点赞
+  likeComment: (data) => utils_request.request({
+    url: "/api/user/product/comment/like",
+    method: "PUT",
+    params: data
+  }),
+  // 获取评论数统计
+  getCommentCount: (productId) => utils_request.request({
+    url: "/api/user/product/comment/count/show",
+    method: "GET",
+    params: { productId }
+  }),
+  // 获取相关推荐商品
+  getRelatedProducts: (productName, limit = 10) => utils_request.request({
+    url: "/api/product/related",
+    method: "GET",
+    params: { productName, limit }
+  }),
+  // 获取分类下商品列表 (支持滚动查询)
+  getCategoryProducts: (params) => utils_request.request({
+    url: "/api/product/categroy/list",
+    method: "GET",
+    params
+  }),
+  // 搜索商品 (支持滚动查询)
+  searchProducts: (params) => utils_request.request({
+    url: "/api/product/search",
+    method: "GET",
+    params
   })
 };
 exports.productApi = productApi;

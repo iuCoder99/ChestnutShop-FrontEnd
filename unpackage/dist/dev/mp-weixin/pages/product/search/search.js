@@ -1,7 +1,6 @@
 "use strict";
 const common_vendor = require("../../../common/vendor.js");
 const common_assets = require("../../../common/assets.js");
-const utils_request = require("../../../utils/request.js");
 const utils_api = require("../../../utils/api.js");
 const _sfc_main = {
   __name: "search",
@@ -16,8 +15,9 @@ const _sfc_main = {
     const isLoadingGuessLike = common_vendor.ref(false);
     const productList = common_vendor.ref([]);
     const sortType = common_vendor.ref("default");
-    const pageNum = common_vendor.ref(1);
-    const pageSize = common_vendor.ref(10);
+    const sortValue = common_vendor.ref(null);
+    const sortId = common_vendor.ref(null);
+    const querySize = common_vendor.ref(20);
     const isLoading = common_vendor.ref(false);
     const hasMore = common_vendor.ref(true);
     common_vendor.onLoad((options) => {
@@ -168,7 +168,8 @@ const _sfc_main = {
       }
       hasSearched.value = true;
       saveHistory();
-      pageNum.value = 1;
+      sortValue.value = null;
+      sortId.value = null;
       productList.value = [];
       hasMore.value = true;
       getProductList();
@@ -178,20 +179,17 @@ const _sfc_main = {
         return;
       isLoading.value = true;
       const params = {
-        pageNum: pageNum.value,
-        pageSize: pageSize.value,
-        keyword: keyword.value.trim(),
-        sortType: sortType.value
+        sortType: sortType.value,
+        sortValue: sortValue.value,
+        sortId: sortId.value,
+        querySize: querySize.value,
+        keyword: keyword.value.trim()
       };
       try {
-        const res = await utils_request.request({
-          url: "/api/product/search",
-          method: "GET",
-          params
-        });
-        if (res.success) {
-          const data = res.data.list || [];
-          const processedData = data.map((item) => ({
+        const res = await utils_api.productApi.searchProducts(params);
+        if (res.success && res.data) {
+          const { list = [], isEnd, cursorCommonEntity } = res.data;
+          const processedData = list.map((item) => ({
             id: item.id,
             name: item.name,
             imageUrl: item.image || item.imageUrl || item.image_url || "/static/images/default.png",
@@ -199,13 +197,16 @@ const _sfc_main = {
             sellPoint: item.description || item.sellPoint || "",
             isEnterprisePrice: item.isEnterprisePrice || false
           }));
-          if (pageNum.value === 1) {
+          if (!sortValue.value && !sortId.value) {
             productList.value = processedData;
           } else {
             productList.value = [...productList.value, ...processedData];
           }
-          hasMore.value = pageNum.value * pageSize.value < res.data.total;
-          pageNum.value += 1;
+          if (cursorCommonEntity) {
+            sortValue.value = cursorCommonEntity.sortValue;
+            sortId.value = cursorCommonEntity.sortId;
+          }
+          hasMore.value = !isEnd;
         }
       } catch (error) {
         common_vendor.index.showToast({ title: "搜索失败，请重试", icon: "none" });
@@ -218,7 +219,8 @@ const _sfc_main = {
       if (sortType.value === type)
         return;
       sortType.value = type;
-      pageNum.value = 1;
+      sortValue.value = null;
+      sortId.value = null;
       productList.value = [];
       hasMore.value = true;
       getProductList();
@@ -228,7 +230,8 @@ const _sfc_main = {
     };
     common_vendor.onPullDownRefresh(() => {
       if (hasSearched.value) {
-        pageNum.value = 1;
+        sortValue.value = null;
+        sortId.value = null;
         productList.value = [];
         hasMore.value = true;
         getProductList();
@@ -274,7 +277,7 @@ const _sfc_main = {
       }, historyList.value.length > 0 ? common_vendor.e({
         o: showHistory.value ? "/static/images/icon-eye-open.png" : "/static/images/icon-eye-close.png",
         p: common_vendor.o(toggleHistory, "d4"),
-        q: common_assets._imports_1$5,
+        q: common_assets._imports_1$7,
         r: common_vendor.o(clearHistory, "2f"),
         s: showHistory.value
       }, showHistory.value ? {
@@ -324,7 +327,7 @@ const _sfc_main = {
           });
         })
       } : !isLoading.value ? {
-        I: common_assets._imports_2$3,
+        I: common_assets._imports_2,
         J: common_vendor.t(keyword.value),
         K: common_vendor.o(resetSearch, "bd")
       } : {}, {

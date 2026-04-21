@@ -89,9 +89,9 @@ const _sfc_main = {
         c: common_vendor.t(orderInfo.value.orderNo || "-"),
         d: common_vendor.t(orderInfo.value.totalAmount ? orderInfo.value.totalAmount.toFixed(2) : "0.00"),
         e: common_vendor.t(countdown.value),
-        f: common_assets._imports_1$10,
-        g: common_assets._imports_1$10,
-        h: common_assets._imports_1$10,
+        f: common_assets._imports_1$11,
+        g: common_assets._imports_1$11,
+        h: common_assets._imports_1$11,
         i: common_vendor.o(goToOrderList, "61"),
         j: common_vendor.o(rePay, "8d"),
         k: common_vendor.o(contactService, "19")

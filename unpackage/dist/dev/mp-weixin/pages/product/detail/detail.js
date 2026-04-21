@@ -144,8 +144,9 @@ const _sfc_main = {
           const cacheKey = `product_detail_${productId}`;
           utils_cacheUtil.cacheUtil.set(cacheKey, productDetail.value, 60);
           if (!isRefresh) {
-            loadRelatedProducts(productId);
+            loadRelatedProducts(productDetail.value.name);
             loadComments(productId);
+            loadCommentCount(productId);
             startRefreshTimer();
           }
         } else {
@@ -155,7 +156,7 @@ const _sfc_main = {
             errorMsg.value = "未找到商品信息";
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/product/detail/detail.vue:406", "加载产品详情失败:", error);
+        common_vendor.index.__f__("error", "at pages/product/detail/detail.vue:407", "加载产品详情失败:", error);
         if (!isRefresh)
           errorMsg.value = "产品信息加载异常，请重试";
       } finally {
@@ -209,20 +210,16 @@ const _sfc_main = {
       selectedSpecId.value = productDetail.value.specList[0].id;
       currentStock.value = productDetail.value.specList[0].stock;
     };
-    const loadRelatedProducts = async (productId) => {
-      if (!productId)
+    const loadRelatedProducts = async (productName) => {
+      if (!productName)
         return;
       try {
-        const result = await utils_request.request({
-          url: "/api/product/related",
-          method: "GET",
-          params: { productId }
-        });
+        const result = await utils_api.productApi.getRelatedProducts(productName, 5);
         if (result.success && result.data) {
           relatedProducts.value = Array.isArray(result.data) ? result.data : [result.data];
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/product/detail/detail.vue:481", "加载相关商品失败:", error);
+        common_vendor.index.__f__("error", "at pages/product/detail/detail.vue:478", "加载相关商品失败:", error);
       }
     };
     const loadComments = async (productId) => {
@@ -263,13 +260,28 @@ const _sfc_main = {
             }).filter(Boolean);
             return {
               ...item,
-              imageUrls: parsedImgs
+              imageUrls: parsedImgs,
+              isLiked: !!item.like
+              // 处理预览评价的点赞状态
             };
           });
-          commentCount.value = res.data.list.length;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/product/detail/detail.vue:533", "加载预览评价失败:", e);
+        common_vendor.index.__f__("error", "at pages/product/detail/detail.vue:529", "加载预览评价失败:", e);
+      }
+    };
+    const loadCommentCount = async (productId) => {
+      try {
+        const res = await utils_api.productApi.getCommentCount(productId);
+        if (res.success && res.data !== void 0) {
+          if (typeof res.data === "object" && res.data !== null && "productCommentCount" in res.data) {
+            commentCount.value = Number(res.data.productCommentCount) || 0;
+          } else {
+            commentCount.value = Number(res.data) || 0;
+          }
+        }
+      } catch (e) {
+        common_vendor.index.__f__("error", "at pages/product/detail/detail.vue:545", "加载点赞总数失败:", e);
       }
     };
     const goBack = () => {

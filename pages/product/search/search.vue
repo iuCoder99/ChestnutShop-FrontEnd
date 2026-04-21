@@ -177,7 +177,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
 import { onLoad, onPullDownRefresh, onReachBottom } from '@dcloudio/uni-app';
-import request from '@/utils/request';
 import { productApi } from '@/utils/api';
 import cacheUtil from '@/utils/cacheUtil';
 
@@ -192,12 +191,15 @@ const showHistory = ref(true);
 // 猜你喜欢数据
 const guessLikeProductList = ref([]);
 const isLoadingGuessLike = ref(false);
+const guessLikeBeginId = ref(null);
+const guessLikeIsEnd = ref(false);
 
 // 搜索结果数据
 const productList = ref([]);
 const sortType = ref('default');
-const pageNum = ref(1);
-const pageSize = ref(10);
+const sortValue = ref(null);
+const sortId = ref(null);
+const querySize = ref(20);
 const isLoading = ref(false);
 const hasMore = ref(true);
 
@@ -212,7 +214,7 @@ onLoad((options) => {
     onSearch();
   } else {
     // 否则加载猜你喜欢
-    getGuessLikeProductList();
+    getGuessLikeProductList(false, true);
   }
 });
 
@@ -302,7 +304,7 @@ const clearKeyword = () => {
   hasSearched.value = false;
   // 恢复到初始状态，重新加载猜你喜欢（如果需要）
   if (guessLikeProductList.value.length === 0) {
-    getGuessLikeProductList();
+    getGuessLikeProductList(false, true);
   }
 };
 
@@ -316,26 +318,45 @@ const resetSearch = () => {
 };
 
 // --- 猜你喜欢逻辑 (复用首页) ---
-const getGuessLikeProductList = async (append = false) => {
+const getGuessLikeProductList = async (append = false, forceRefresh = false) => {
   if (isLoadingGuessLike.value) return;
+  
+  if (forceRefresh) {
+    guessLikeBeginId.value = null;
+    guessLikeIsEnd.value = false;
+  }
+  
+  // 如果之前已经加载完毕，且现在是追加模式，则重置 beginId 实现无限循环刷新
+  if (guessLikeIsEnd.value && append) {
+    console.log('--- [搜索页猜你喜欢] 已触底，重置 beginId 实现无限刷新');
+    guessLikeBeginId.value = null;
+    guessLikeIsEnd.value = false;
+  }
+
   isLoadingGuessLike.value = true;
   
   try {
-    const result = await productApi.getScrollProductList();
+    const params = {
+      beginId: guessLikeBeginId.value,
+      querySize: 20 // 搜索页猜你喜欢数量适中
+    };
+    
+    const result = await productApi.getScrollProductList(params);
     let productData = [];
-    if (result) {
-      if (result.data && Array.isArray(result.data.productList)) {
-        productData = result.data.productList;
-      } else if (result.data && Array.isArray(result.data)) {
-        productData = result.data;
-      } else if (Array.isArray(result)) {
-        productData = result;
+    let isEnd = true;
+    let nextBeginId = null;
+
+    if (result && result.success && result.data) {
+      productData = result.data.list || [];
+      isEnd = result.data.isEnd;
+      if (result.data.simpleCursorCommonEntity) {
+        nextBeginId = result.data.simpleCursorCommonEntity.sortId;
       }
     }
 
     if (productData.length > 0) {
       const processedData = productData.map((item, index) => {
-        let imgUrl = item.image || item.imageUrl || item.imgUrl || item.image_url || '';
+        let imgUrl = item.image || item.imageUrl || '';
         if (typeof imgUrl === 'string') {
           imgUrl = imgUrl.replace(/`/g, '').trim();
           if (!imgUrl) imgUrl = '/static/images/default.png';
@@ -343,17 +364,12 @@ const getGuessLikeProductList = async (append = false) => {
           imgUrl = '/static/images/default.png';
         }
         
-        let price = item.price;
-        if (typeof price === 'string') {
-          price = parseFloat(price.replace(/[^\d.]/g, ''));
-        }
-        
         return {
           id: item.id || index,
           name: item.name || item.title || `产品${index}`,
           imageUrl: imgUrl,
-          price: price || 0,
-          sellPoint: item.description || item.sellPoint || '',
+          price: parseFloat(item.price) || 0,
+          sellPoint: item.sellPoint || item.description || '',
           isEnterprisePrice: item.isEnterprisePrice || false
         };
       });
@@ -363,6 +379,13 @@ const getGuessLikeProductList = async (append = false) => {
       } else {
         guessLikeProductList.value = processedData;
       }
+      
+      // 更新分页状态
+      guessLikeBeginId.value = isEnd ? null : nextBeginId;
+      guessLikeIsEnd.value = isEnd;
+    } else {
+      guessLikeIsEnd.value = true;
+      guessLikeBeginId.value = null; // 没数据了也重置，下次从头开始
     }
   } catch (error) {
     console.error('获取猜你喜欢失败', error);
@@ -380,7 +403,8 @@ const onSearch = () => {
   hasSearched.value = true;
   saveHistory();
   
-  pageNum.value = 1;
+  sortValue.value = null;
+  sortId.value = null;
   productList.value = [];
   hasMore.value = true;
   getProductList();
@@ -391,40 +415,54 @@ const getProductList = async () => {
   isLoading.value = true;
 
   const params = {
-    pageNum: pageNum.value,
-    pageSize: pageSize.value,
-    keyword: keyword.value.trim(),
-    sortType: sortType.value
+    sortType: sortType.value,
+    sortValue: sortValue.value,
+    sortId: sortId.value,
+    querySize: querySize.value,
+    keyword: keyword.value.trim()
   };
 
   try {
-    const res = await request({
-      url: '/api/product/search',
-      method: 'GET',
-      params
-    });
-    if (res.success) {
-      const data = res.data.list || [];
-      const processedData = data.map(item => ({
-        id: item.id,
-        name: item.name,
-        imageUrl: item.image || item.imageUrl || item.image_url || '/static/images/default.png',
-        price: item.price || 0,
-        sellPoint: item.description || item.sellPoint || '',
-        isEnterprisePrice: item.isEnterprisePrice || false
-      }));
+    const res = await productApi.searchProducts(params);
+    if (res && res.success && res.data) {
+      const { list = [], isEnd, cursorCommonEntity } = res.data;
       
-      if (pageNum.value === 1) {
+      const processedData = list.map(item => {
+        let imgUrl = item.image || item.imageUrl || '';
+        if (typeof imgUrl === 'string') {
+          imgUrl = imgUrl.replace(/`/g, '').trim();
+          if (!imgUrl) imgUrl = '/static/images/default.png';
+        }
+        
+        return {
+          id: item.id,
+          name: item.name,
+          imageUrl: imgUrl,
+          price: parseFloat(item.price) || 0,
+          sellPoint: item.sellPoint || item.description || '',
+          isEnterprisePrice: item.isEnterprisePrice || false
+        };
+      });
+      
+      if (!sortValue.value && !sortId.value) {
         productList.value = processedData;
       } else {
         productList.value = [...productList.value, ...processedData];
       }
       
-      hasMore.value = pageNum.value * pageSize.value < res.data.total;
-      pageNum.value += 1;
+      if (cursorCommonEntity) {
+        sortValue.value = cursorCommonEntity.sortValue;
+        sortId.value = cursorCommonEntity.sortId;
+      }
+      
+      hasMore.value = !isEnd;
+    } else {
+      hasMore.value = false;
     }
   } catch (error) {
+    console.error('搜索产品失败:', error);
     uni.showToast({ title: '搜索失败，请重试', icon: 'none' });
+    hasMore.value = false;
   } finally {
     isLoading.value = false;
     uni.stopPullDownRefresh();
@@ -434,7 +472,8 @@ const getProductList = async () => {
 const setSortType = (type) => {
   if (sortType.value === type) return;
   sortType.value = type;
-  pageNum.value = 1;
+  sortValue.value = null;
+  sortId.value = null;
   productList.value = [];
   hasMore.value = true;
   getProductList();
@@ -447,7 +486,8 @@ const goToProductDetail = (productId) => {
 // --- 生命周期 ---
 onPullDownRefresh(() => {
   if (hasSearched.value) {
-    pageNum.value = 1;
+    sortValue.value = null;
+    sortId.value = null;
     productList.value = [];
     hasMore.value = true;
     getProductList();

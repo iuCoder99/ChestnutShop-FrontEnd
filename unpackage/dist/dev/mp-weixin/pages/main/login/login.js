@@ -161,10 +161,10 @@ const _sfc_main = {
         a: common_assets._imports_0$8,
         b: !isRegisterMode.value
       }, !isRegisterMode.value ? common_vendor.e({
-        c: common_assets._imports_1$9,
+        c: common_assets._imports_1$10,
         d: accountForm.value.username,
         e: common_vendor.o(($event) => accountForm.value.username = $event.detail.value, "76"),
-        f: common_assets._imports_2$2,
+        f: common_assets._imports_2$3,
         g: !showPassword.value,
         h: accountForm.value.password,
         i: common_vendor.o(($event) => accountForm.value.password = $event.detail.value, "4c"),
@@ -178,14 +178,14 @@ const _sfc_main = {
         p: common_vendor.o(($event) => toggleRegisterMode(true), "f9"),
         q: common_vendor.o(handleForgetPassword, "bd")
       }) : common_vendor.e({
-        r: common_assets._imports_1$9,
+        r: common_assets._imports_1$10,
         s: registerForm.value.username,
         t: common_vendor.o(($event) => registerForm.value.username = $event.detail.value, "1f"),
-        v: common_assets._imports_2$2,
+        v: common_assets._imports_2$3,
         w: !showPassword.value,
         x: registerForm.value.password,
         y: common_vendor.o(($event) => registerForm.value.password = $event.detail.value, "54"),
-        z: common_assets._imports_3$3,
+        z: common_assets._imports_3$1,
         A: registerForm.value.phone,
         B: common_vendor.o(($event) => registerForm.value.phone = $event.detail.value, "9c"),
         C: isLoginIng.value

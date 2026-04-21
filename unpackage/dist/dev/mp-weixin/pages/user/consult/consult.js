@@ -214,7 +214,7 @@ const _sfc_main = {
       }, viewMode.value === "LIST" ? common_vendor.e({
         b: common_vendor.unref(chatStore).sessions.length === 0
       }, common_vendor.unref(chatStore).sessions.length === 0 ? {
-        c: common_assets._imports_0$3
+        c: common_assets._imports_0$2
       } : {}, {
         d: common_vendor.f(common_vendor.unref(chatStore).sessions, (session, k0, i0) => {
           return common_vendor.e({
@@ -260,7 +260,7 @@ const _sfc_main = {
         m: common_vendor.t(((_c = productInfos.value[currentProductId.value]) == null ? void 0 : _c.price) || "0.00"),
         n: common_vendor.o(($event) => goToProduct(currentProductId.value), "9f"),
         o: common_vendor.o(sendProductMessage, "00"),
-        p: common_assets._imports_1$6,
+        p: common_assets._imports_1$8,
         q: common_vendor.o(($event) => showProductBar.value = false, "4f")
       } : {}, {
         r: common_vendor.o(sendMessage, "5c"),

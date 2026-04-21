@@ -2,6 +2,7 @@
 const common_vendor = require("../../../common/vendor.js");
 const common_assets = require("../../../common/assets.js");
 const utils_request = require("../../../utils/request.js");
+const utils_api = require("../../../utils/api.js");
 const store_modules_userStore = require("../../../store/modules/userStore.js");
 const _sfc_main = {
   __name: "comment",
@@ -41,14 +42,46 @@ const _sfc_main = {
       currentSortType.value = type;
       loadFirstComments(true);
     };
-    const toggleLike = (comment) => {
-      comment.isLiked = !comment.isLiked;
-      if (comment.isLiked) {
+    const toggleLike = async (comment, isFirst) => {
+      common_vendor.index.__f__("log", "at pages/product/comment/comment.vue:241", "[CommentPage] 点赞交互触发:", { id: comment.id, isFirst, currentLiked: comment.isLiked });
+      if (!userStore.token) {
+        common_vendor.index.__f__("warn", "at pages/product/comment/comment.vue:244", "[CommentPage] 未登录，拦截点赞");
+        common_vendor.index.showToast({ title: "请先登录", icon: "none" });
+        setTimeout(() => {
+          common_vendor.index.navigateTo({ url: "/pages/main/login/login" });
+        }, 1e3);
+        return;
+      }
+      const oldLiked = comment.isLiked;
+      const newLiked = !oldLiked;
+      comment.isLiked = newLiked;
+      if (newLiked) {
         comment.likeCount = (Number(comment.likeCount) || 0) + 1;
       } else {
         comment.likeCount = Math.max(0, (Number(comment.likeCount) || 0) - 1);
       }
-      common_vendor.index.showToast({ title: comment.isLiked ? "点赞成功" : "取消点赞", icon: "none" });
+      try {
+        common_vendor.index.__f__("log", "at pages/product/comment/comment.vue:264", "[CommentPage] 发起点赞请求:", { productCommentId: String(comment.id), isLike: newLiked ? 1 : 0 });
+        const res = await utils_api.productApi.likeComment({
+          productCommentId: String(comment.id),
+          isLike: newLiked ? 1 : 0,
+          isFirstComment: isFirst ? 1 : 0
+          // 1:是 0:不是
+        });
+        if (!res.success) {
+          throw new Error(res.message || "操作失败");
+        }
+        common_vendor.index.showToast({ title: newLiked ? "点赞成功" : "取消点赞", icon: "none" });
+      } catch (e) {
+        common_vendor.index.__f__("error", "at pages/product/comment/comment.vue:277", "[CommentPage] 点赞请求异常:", e);
+        comment.isLiked = oldLiked;
+        if (oldLiked) {
+          comment.likeCount = (Number(comment.likeCount) || 0) + 1;
+        } else {
+          comment.likeCount = Math.max(0, (Number(comment.likeCount) || 0) - 1);
+        }
+        common_vendor.index.showToast({ title: e.message || "操作失败", icon: "none" });
+      }
     };
     const openReplyPopup = (comment, parent = null) => {
       currentComment.value = comment;
@@ -164,6 +197,8 @@ const _sfc_main = {
             return {
               ...item,
               imageUrls: parsedImgs,
+              isLiked: !!item.like,
+              // 处理点赞状态
               isExpanded: false,
               appendComment: null,
               secondComments: [],
@@ -191,7 +226,7 @@ const _sfc_main = {
           }
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/product/comment/comment.vue:411", "加载一级评论失败:", e);
+        common_vendor.index.__f__("error", "at pages/product/comment/comment.vue:452", "加载一级评论失败:", e);
       } finally {
         isLoading.value = false;
         isLoadingMore.value = false;
@@ -250,7 +285,7 @@ const _sfc_main = {
           };
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/product/comment/comment.vue:479", "加载追评失败:", e);
+        common_vendor.index.__f__("error", "at pages/product/comment/comment.vue:520", "加载追评失败:", e);
       }
     };
     const loadMoreSecond = async (index, isInitial = false) => {
@@ -273,7 +308,12 @@ const _sfc_main = {
         });
         if (res.success && res.data) {
           const data = res.data;
-          comment.secondComments = [...comment.secondComments, ...data.list];
+          const newList = data.list.map((item) => ({
+            ...item,
+            isLiked: !!item.like
+            // 处理点赞状态
+          }));
+          comment.secondComments = [...comment.secondComments, ...newList];
           if (data.cursorCommonEntity) {
             comment.secondEnd = data.cursorCommonEntity.isEnd || data.list.length < querySize;
             comment.secondSortValue = data.cursorCommonEntity.sortValue || "";
@@ -290,7 +330,7 @@ const _sfc_main = {
           comment.secondEnd = true;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/product/comment/comment.vue:523", "加载二级评论失败:", e);
+        common_vendor.index.__f__("error", "at pages/product/comment/comment.vue:568", "加载二级评论失败:", e);
       }
     };
     const previewImage = (urls, current) => {
@@ -324,7 +364,7 @@ const _sfc_main = {
             d: common_vendor.t(comment.isLiked ? "❤️" : "🤍"),
             e: common_vendor.t(comment.likeCount || 0),
             f: comment.isLiked ? 1 : "",
-            g: common_vendor.o(($event) => toggleLike(comment), comment.id),
+            g: common_vendor.o(($event) => toggleLike(comment, true), comment.id),
             h: common_vendor.o(($event) => openReplyPopup(comment), comment.id),
             i: common_vendor.t(comment.content),
             j: comment.imageUrls && comment.imageUrls.length > 0
@@ -379,7 +419,7 @@ const _sfc_main = {
                 f: common_vendor.t(reply.isLiked ? "❤️" : "🤍"),
                 g: common_vendor.t(reply.likeCount || 0),
                 h: reply.isLiked ? 1 : "",
-                i: common_vendor.o(($event) => toggleLike(reply), reply.id),
+                i: common_vendor.o(($event) => toggleLike(reply, false), reply.id),
                 j: common_vendor.o(($event) => openReplyPopup(reply, comment), reply.id),
                 k: common_vendor.t(reply.content),
                 l: reply.id
@@ -406,16 +446,16 @@ const _sfc_main = {
         n: showReplyPopup.value
       }, showReplyPopup.value ? {
         o: common_vendor.t(((_a = currentComment.value) == null ? void 0 : _a.userNickname) || "用户"),
-        p: common_vendor.o(closeReplyPopup, "21"),
+        p: common_vendor.o(closeReplyPopup, "33"),
         q: replyContent.value,
-        r: common_vendor.o(($event) => replyContent.value = $event.detail.value, "11"),
+        r: common_vendor.o(($event) => replyContent.value = $event.detail.value, "87"),
         s: isAnonymous.value ? 1 : "",
-        t: common_vendor.o(($event) => isAnonymous.value = !isAnonymous.value, "ee"),
+        t: common_vendor.o(($event) => isAnonymous.value = !isAnonymous.value, "ae"),
         v: !replyContent.value.trim(),
-        w: common_vendor.o(submitReply, "c8"),
+        w: common_vendor.o(submitReply, "68"),
         x: common_vendor.o(() => {
-        }, "18"),
-        y: common_vendor.o(closeReplyPopup, "27")
+        }, "6b"),
+        y: common_vendor.o(closeReplyPopup, "01")
       } : {});
     };
   }

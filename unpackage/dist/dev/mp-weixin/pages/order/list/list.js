@@ -518,7 +518,7 @@ const _sfc_main = {
           });
         })
       } : !isLoadingMore.value ? {
-        e: common_assets._imports_3$1,
+        e: common_assets._imports_3$2,
         f: common_vendor.t(getEmptyText()),
         g: common_vendor.o((...args) => _ctx.goToHome && _ctx.goToHome(...args), "51")
       } : {}, {

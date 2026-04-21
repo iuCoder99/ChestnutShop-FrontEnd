@@ -47,7 +47,7 @@ const _sfc_main = {
           addressForm.value = JSON.parse(decodeURIComponent(options.address));
           initAreaPicker();
         } catch (error) {
-          common_vendor.index.__f__("error", "at pages/address/edit/edit.vue:148", "地址数据解析失败:", error);
+          common_vendor.index.__f__("error", "at pages/address/edit/edit.vue:193", "地址数据解析失败:", error);
           common_vendor.index.showToast({ title: "地址数据格式错误", icon: "none" });
           setTimeout(() => {
             common_vendor.index.navigateBack();
@@ -74,6 +74,35 @@ const _sfc_main = {
       common_vendor.index.$off("addressEdited");
       common_vendor.index.$off("addressAdded");
     });
+    const handleDelete = () => {
+      common_vendor.index.showModal({
+        title: "提示",
+        content: "确定要删除该地址吗？",
+        success: async (res) => {
+          if (res.confirm) {
+            common_vendor.index.showLoading({ title: "删除中" });
+            try {
+              const res2 = await utils_request.request({
+                url: "/api/address/delete",
+                method: "DELETE",
+                params: { id: addressForm.value.id }
+              });
+              if (res2.success) {
+                common_vendor.index.showToast({ title: "删除成功" });
+                common_vendor.index.$emit("addressEdited");
+                setTimeout(() => {
+                  common_vendor.index.navigateBack();
+                }, 1500);
+              }
+            } catch (error) {
+              common_vendor.index.__f__("error", "at pages/address/edit/edit.vue:247", "删除失败:", error);
+            } finally {
+              common_vendor.index.hideLoading();
+            }
+          }
+        }
+      });
+    };
     const initAreaPicker = () => {
       var _a, _b;
       const pName = addressForm.value.province;
@@ -206,12 +235,12 @@ const _sfc_main = {
     return (_ctx, _cache) => {
       return common_vendor.e({
         a: common_assets._imports_0$4,
-        b: common_vendor.o(navigateBack, "0e"),
+        b: common_vendor.o(navigateBack, "5f"),
         c: common_vendor.t(isEditMode.value ? "编辑地址" : "新增地址"),
-        d: common_vendor.o(submitAddress, "40"),
-        e: isSubmitting.value,
+        d: isSubmitting.value ? 1 : "",
+        e: common_vendor.o(submitAddress, "3a"),
         f: addressForm.value.receiver,
-        g: common_vendor.o(($event) => addressForm.value.receiver = $event.detail.value, "34"),
+        g: common_vendor.o(($event) => addressForm.value.receiver = $event.detail.value, "36"),
         h: common_vendor.o([($event) => addressForm.value.phone = $event.detail.value, validatePhone], "62"),
         i: addressForm.value.phone,
         j: phoneError.value
@@ -222,39 +251,43 @@ const _sfc_main = {
         m: common_vendor.t(addressForm.value.city),
         n: common_vendor.t(addressForm.value.district)
       } : {}, {
-        o: common_assets._imports_1$8,
-        p: common_vendor.o(showAreaPicker, "d4"),
+        o: common_assets._imports_1$1,
+        p: common_vendor.o(showAreaPicker, "32"),
         q: addressForm.value.detailAddress,
-        r: common_vendor.o(($event) => addressForm.value.detailAddress = $event.detail.value, "f5"),
+        r: common_vendor.o(($event) => addressForm.value.detailAddress = $event.detail.value, "63"),
         s: !!addressForm.value.isDefault,
-        t: common_vendor.o(handleDefaultChange, "d6"),
-        v: areaPickerVisible.value
+        t: common_vendor.o(handleDefaultChange, "6d"),
+        v: isEditMode.value
+      }, isEditMode.value ? {
+        w: common_vendor.o(handleDelete, "c6")
+      } : {}, {
+        x: areaPickerVisible.value
       }, areaPickerVisible.value ? {
-        w: common_vendor.o(hideAreaPicker, "23"),
-        x: common_vendor.o(confirmArea, "d8"),
-        y: common_vendor.f(provinceList.value, (province, index, i0) => {
+        y: common_vendor.o(hideAreaPicker, "bc"),
+        z: common_vendor.o(confirmArea, "f1"),
+        A: common_vendor.f(provinceList.value, (province, index, i0) => {
           return {
             a: common_vendor.t(province.name),
             b: index
           };
         }),
-        z: common_vendor.f(cityList.value, (city, index, i0) => {
+        B: common_vendor.f(cityList.value, (city, index, i0) => {
           return {
             a: common_vendor.t(city.name),
             b: index
           };
         }),
-        A: common_vendor.f(districtList.value, (district, index, i0) => {
+        C: common_vendor.f(districtList.value, (district, index, i0) => {
           return {
             a: common_vendor.t(district),
             b: index
           };
         }),
-        B: pickerValue.value,
-        C: common_vendor.o(onPickerChange, "82"),
-        D: common_vendor.o(() => {
-        }, "21"),
-        E: common_vendor.o(hideAreaPicker, "66")
+        D: pickerValue.value,
+        E: common_vendor.o(onPickerChange, "2b"),
+        F: common_vendor.o(() => {
+        }, "84"),
+        G: common_vendor.o(hideAreaPicker, "f6")
       } : {});
     };
   }

@@ -95,7 +95,7 @@ const _sfc_main = {
     };
     return (_ctx, _cache) => {
       return common_vendor.e({
-        a: common_vendor.o(goToAddAddress, "6d"),
+        a: common_vendor.o(goToAddAddress, "cd"),
         b: addressList.value.length > 0
       }, addressList.value.length > 0 ? {
         c: common_vendor.f(addressList.value, (item, index, i0) => {
@@ -110,17 +110,19 @@ const _sfc_main = {
             g: common_vendor.t(item.detailAddress),
             h: isSelectMode.value && item.id === selectedAddressId.value
           }, isSelectMode.value && item.id === selectedAddressId.value ? {
-            i: common_assets._imports_1$2
+            i: common_assets._imports_1$3
           } : {}, {
-            j: common_vendor.o(($event) => handleItemClick(item), index),
-            k: common_vendor.o(($event) => goToEditAddress(item), index),
-            l: common_vendor.o(($event) => deleteAddress(item.id, index), index),
-            m: index
+            j: common_vendor.o(($event) => goToEditAddress(item), index),
+            k: common_vendor.o(($event) => deleteAddress(item.id, index), index),
+            l: common_vendor.o(() => {
+            }, index),
+            m: index,
+            n: common_vendor.o(($event) => handleItemClick(item), index)
           });
         })
       } : {
-        d: common_assets._imports_1$1,
-        e: common_vendor.o(goToAddAddress, "54")
+        d: common_assets._imports_1$2,
+        e: common_vendor.o(goToAddAddress, "61")
       });
     };
   }

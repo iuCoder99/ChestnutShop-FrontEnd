@@ -1,21 +1,26 @@
 "use strict";
 const common_vendor = require("../../../common/vendor.js");
 const common_assets = require("../../../common/assets.js");
-const utils_request = require("../../../utils/request.js");
+const utils_api = require("../../../utils/api.js");
 const _sfc_main = {
   __name: "list",
   setup(__props) {
-    const categoryId = common_vendor.ref("");
+    const pageCategoryId = common_vendor.ref("");
+    const isFirstCategoryId = common_vendor.ref(false);
     const sortType = common_vendor.ref("default");
-    const page = common_vendor.ref(1);
-    common_vendor.ref(10);
     const productList = common_vendor.ref([]);
     const loading = common_vendor.ref(false);
     const hasMore = common_vendor.ref(true);
-    const beginProductId = common_vendor.ref("0");
+    const sortValue = common_vendor.ref(null);
+    const sortId = common_vendor.ref(null);
+    const querySize = common_vendor.ref(20);
     common_vendor.onLoad((options) => {
       if (options.categoryId) {
-        categoryId.value = options.categoryId;
+        pageCategoryId.value = options.categoryId;
+        isFirstCategoryId.value = options.isFirstCategoryId === "true" || options.isFirstCategoryId === true;
+        if (options.sortType) {
+          sortType.value = options.sortType;
+        }
         if (options.categoryName) {
           common_vendor.index.setNavigationBarTitle({
             title: options.categoryName
@@ -28,8 +33,8 @@ const _sfc_main = {
       if (sortType.value === type)
         return;
       sortType.value = type;
-      page.value = 1;
-      beginProductId.value = "0";
+      sortValue.value = null;
+      sortId.value = null;
       productList.value = [];
       hasMore.value = true;
       loadProducts();
@@ -39,37 +44,37 @@ const _sfc_main = {
         return;
       loading.value = true;
       try {
-        let response;
-        common_vendor.index.__f__("log", "at pages/product/list/list.vue:125", "Using Category List API with sortType:", sortType.value);
-        response = await utils_request.request({
-          url: `/api/category/product/list/${categoryId.value}/${beginProductId.value}`,
-          method: "GET",
-          params: {
-            sortType: sortType.value
-          },
-          timeout: 2e4
-        });
-        if (response && response.success) {
-          const data = response.data;
-          if (!data) {
-            hasMore.value = false;
-            return;
-          }
-          const newProducts = data.productList || [];
-          if (newProducts.length > 0) {
-            productList.value = [...productList.value, ...newProducts];
-            beginProductId.value = String(data.endProductId);
-            if (!data.endProductId || newProducts.length === 0) {
-              hasMore.value = false;
+        const params = {
+          sortType: sortType.value,
+          // 查询排序方式：default, priceAsc, priceDesc, newest
+          categoryId: pageCategoryId.value,
+          // 分类id
+          isFirstCategoryId: isFirstCategoryId.value,
+          // 是否为一级分类id
+          sortValue: sortValue.value,
+          sortId: sortId.value,
+          querySize: querySize.value
+        };
+        common_vendor.index.__f__("log", "at pages/product/list/list.vue:152", "Using Category List API with params:", params);
+        const result = await utils_api.productApi.getCategoryProducts(params);
+        if (result && result.success && result.data) {
+          const { list = [], isEnd, cursorCommonEntity } = result.data;
+          if (list.length > 0) {
+            productList.value = [...productList.value, ...list];
+            if (cursorCommonEntity) {
+              sortValue.value = cursorCommonEntity.sortValue;
+              sortId.value = cursorCommonEntity.sortId;
             }
+            hasMore.value = !isEnd;
           } else {
             hasMore.value = false;
           }
         } else {
           common_vendor.index.showToast({ title: "获取商品失败", icon: "none" });
+          hasMore.value = false;
         }
       } catch (e) {
-        common_vendor.index.__f__("error", "at pages/product/list/list.vue:160", e);
+        common_vendor.index.__f__("error", "at pages/product/list/list.vue:175", e);
         common_vendor.index.showToast({ title: "加载失败", icon: "none" });
       } finally {
         loading.value = false;
@@ -93,9 +98,15 @@ const _sfc_main = {
         f: common_vendor.o(($event) => handleSort("priceDesc"), "b2"),
         g: sortType.value === "newest" ? 1 : "",
         h: common_vendor.o(($event) => handleSort("newest"), "ec"),
-        i: productList.value.length > 0
-      }, productList.value.length > 0 ? {
-        j: common_vendor.f(productList.value, (item, index, i0) => {
+        i: loading.value && productList.value.length === 0
+      }, loading.value && productList.value.length === 0 ? {
+        j: common_vendor.f(6, (i, k0, i0) => {
+          return {
+            a: i
+          };
+        })
+      } : productList.value.length > 0 ? {
+        l: common_vendor.f(productList.value, (item, index, i0) => {
           return common_vendor.e({
             a: item.image || item.imageUrl || "/static/images/default-product.png",
             b: common_vendor.t(item.name),
@@ -103,19 +114,20 @@ const _sfc_main = {
             d: common_vendor.t((item.price || 0).toFixed(2)),
             e: item.isEnterprisePrice
           }, item.isEnterprisePrice ? {} : {}, {
-            f: index,
-            g: common_vendor.o(($event) => goToDetail(item.id), index)
+            f: item.id || index,
+            g: common_vendor.o(($event) => goToDetail(item.id), item.id || index)
           });
         })
       } : !loading.value ? {
-        l: common_assets._imports_1
+        n: common_assets._imports_1
       } : {}, {
-        k: !loading.value,
-        m: loading.value
-      }, loading.value ? {} : {}, {
-        n: !hasMore.value && productList.value.length > 0
+        k: productList.value.length > 0,
+        m: !loading.value,
+        o: loading.value && productList.value.length > 0
+      }, loading.value && productList.value.length > 0 ? {} : {}, {
+        p: !hasMore.value && productList.value.length > 0
       }, !hasMore.value && productList.value.length > 0 ? {} : {}, {
-        o: common_vendor.o(loadMore, "8b")
+        q: common_vendor.o(loadMore, "8b")
       });
     };
   }

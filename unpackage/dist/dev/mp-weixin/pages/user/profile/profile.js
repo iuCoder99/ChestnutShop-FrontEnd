@@ -30,24 +30,24 @@ const _sfc_main = {
           };
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/user/profile/profile.vue:65", "获取用户信息失败:", error);
+        common_vendor.index.__f__("error", "at pages/user/profile/profile.vue:95", "获取用户信息失败:", error);
       } finally {
         common_vendor.index.hideLoading();
       }
     };
+    const goBack = () => {
+      common_vendor.index.navigateBack();
+    };
     const chooseAvatar = () => {
-      common_vendor.index.__f__("log", "at pages/user/profile/profile.vue:73", "--- chooseAvatar triggered ---");
       common_vendor.index.chooseImage({
         count: 1,
         sizeType: ["compressed"],
         sourceType: ["album", "camera"],
         success: (res) => {
-          common_vendor.index.__f__("log", "at pages/user/profile/profile.vue:81", "--- chooseImage success ---", res.tempFilePaths);
           const tempFilePath = res.tempFilePaths[0];
           uploadAvatar(tempFilePath);
         },
         fail: (err) => {
-          common_vendor.index.__f__("error", "at pages/user/profile/profile.vue:86", "--- chooseImage fail ---", err);
           if (err.errMsg && err.errMsg.indexOf("cancel") === -1) {
             common_vendor.index.showToast({ title: "选择头像失败", icon: "none" });
           }
@@ -69,7 +69,7 @@ const _sfc_main = {
           common_vendor.index.showToast({ title: res.message || "上传失败", icon: "none" });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/user/profile/profile.vue:109", "上传头像失败:", error);
+        common_vendor.index.__f__("error", "at pages/user/profile/profile.vue:139", "上传头像失败:", error);
       } finally {
         common_vendor.index.hideLoading();
       }
@@ -93,7 +93,7 @@ const _sfc_main = {
         });
         if (res.success) {
           common_vendor.index.showToast({ title: "修改成功", icon: "success" });
-          userStore.updateUserInfo(formData.value);
+          userStore.setUserInfo({ ...userStore.userInfo, ...formData.value });
           setTimeout(() => {
             common_vendor.index.navigateBack();
           }, 1500);
@@ -101,7 +101,7 @@ const _sfc_main = {
           common_vendor.index.showToast({ title: res.message || "修改失败", icon: "none" });
         }
       } catch (error) {
-        common_vendor.index.__f__("error", "at pages/user/profile/profile.vue:147", "更新用户信息失败:", error);
+        common_vendor.index.__f__("error", "at pages/user/profile/profile.vue:177", "更新用户信息失败:", error);
       } finally {
         common_vendor.index.hideLoading();
       }
@@ -109,13 +109,18 @@ const _sfc_main = {
     return (_ctx, _cache) => {
       return {
         a: formData.value.avatar || "/static/images/icon-user.png",
-        b: common_assets._imports_1$3,
-        c: common_vendor.o(chooseAvatar, "ab"),
-        d: formData.value.nickname,
-        e: common_vendor.o(($event) => formData.value.nickname = $event.detail.value, "6e"),
-        f: formData.value.phone,
-        g: common_vendor.o(($event) => formData.value.phone = $event.detail.value, "8e"),
-        h: common_vendor.o(handleSave, "5f")
+        b: common_assets._imports_0$3,
+        c: common_vendor.o(chooseAvatar, "c2"),
+        d: common_assets._imports_1$6,
+        e: formData.value.nickname,
+        f: common_vendor.o(($event) => formData.value.nickname = $event.detail.value, "06"),
+        g: common_assets._imports_3$1,
+        h: formData.value.phone,
+        i: common_vendor.o(($event) => formData.value.phone = $event.detail.value, "63"),
+        j: common_assets._imports_1$4,
+        k: !formData.value.nickname ? 1 : "",
+        l: common_vendor.o(handleSave, "83"),
+        m: common_vendor.o(goBack, "6f")
       };
     };
   }

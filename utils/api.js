@@ -58,9 +58,16 @@ export const productApi = {
     });
   },
   // 获取滚动查询的商品列表（猜你喜欢）
-  getScrollProductList: () => request({
+  getScrollProductList: (params) => request({
     url: '/api/product/scroll/query/list',
-    method: 'GET'
+    method: 'GET',
+    params
+  }),
+  // 获取热门商品
+  getHotProductList: (params) => request({
+    url: '/api/product/hot',
+    method: 'GET',
+    params
   }),
   // 获取热门搜索关键词
   getHotKeywords: () => request({
@@ -88,6 +95,12 @@ export const productApi = {
   // 获取分类下商品列表 (支持滚动查询)
   getCategoryProducts: (params) => request({
     url: '/api/product/categroy/list',
+    method: 'GET',
+    params
+  }),
+  // 搜索商品 (支持滚动查询)
+  searchProducts: (params) => request({
+    url: '/api/product/search',
     method: 'GET',
     params
   })
